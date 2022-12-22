@@ -28,6 +28,10 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/', [BlogPostController::class, 'index'])->name('posts.list');
-Route::get('/blog/{id}', [BlogPostController::class, 'show']);
+Route::get('/blog/{id}', [BlogPostController::class, 'show'])->name('posts.view');
+Route::middleware('auth')->group(function () {
+    Route::get('/blog/create/post', [BlogPostController::class, 'create'])->name('posts.create');
+    Route::post('/blog/create/post', [BlogPostController::class, 'store'])->name('posts.store');
+});
 
 require __DIR__ . '/auth.php';
