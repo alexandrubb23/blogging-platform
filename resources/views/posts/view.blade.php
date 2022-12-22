@@ -2,16 +2,13 @@
 
 @section('content')
 <article class="flex flex-col shadow my-4">
-  <a href="#" class="hover:opacity-75">
-    <img src="https://source.unsplash.com/collection/1346951/1000x500?sig=1">
-  </a>
+  <x-posts.post-image :$post />
   <div class="bg-white flex flex-col justify-start p-6">
-    <a href="#" class="text-blue-700 text-sm font-bold uppercase pb-4">Technology</a>
-    <a href="#" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ $post->title }}</a>
-    <p href="#" class="text-sm pb-8">
-      By <a href="#" class="font-semibold hover:text-gray-800">{{ $post->user->name }}</a>, Published on {{ $post->formatted_date }}
-    </p>
+    <x-posts.post-category />
+    <x-posts.post-title :$post />
+    <x-posts.post-publish-date :$post />
     {{ $post->description_with_html }}
+  </div>
 </article>
 
 <div class="w-full flex pt-6">
