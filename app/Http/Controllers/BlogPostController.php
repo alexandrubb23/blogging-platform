@@ -14,7 +14,8 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        return view('posts.list');
+        $posts = ['posts' => BlogPost::all()];
+        return view('posts.list', $posts);
     }
 
     /**
@@ -44,8 +45,9 @@ class BlogPostController extends Controller
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function show(BlogPost $post)
+    public function show(BlogPost $id)
     {
-        return view('posts.view');
+        $post = ['post' => $id];
+        return view('posts.view', $post);
     }
 }

@@ -28,6 +28,6 @@ Route::middleware('auth')->group(function () {
 
 
 Route::get('/', [BlogPostController::class, 'index'])->name('posts.list');
-Route::get('/post/{id}', [BlogPostController::class, 'show']);
+Route::get('/blog/{id}', [BlogPostController::class, 'show']);
 
 require __DIR__ . '/auth.php';
