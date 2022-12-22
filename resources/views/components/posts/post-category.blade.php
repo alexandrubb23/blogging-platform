@@ -1,0 +1,1 @@
+<a href="#" class="text-blue-700 text-sm font-bold uppercase pb-4">Technology</a>

@@ -1,0 +1,1 @@
+<a href="{{ route_to('post_view', $post->id) }}" class="pb-6">{{ $post->short_description }}</a>

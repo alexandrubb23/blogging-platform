@@ -25,7 +25,8 @@ class BlogPostController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $view = config('routes.posts_create');
+        return view($view);
     }
 
     /**
@@ -48,6 +49,8 @@ class BlogPostController extends Controller
     public function show(BlogPost $id)
     {
         $post = ['post' => $id];
-        return view('posts.view', $post);
+        $view = config('routes.post_view');
+
+        return view($view, $post);
     }
 }
