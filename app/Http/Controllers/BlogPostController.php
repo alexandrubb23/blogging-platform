@@ -6,7 +6,6 @@ use App\Http\Requests\StoreBlogPostRequest;
 use App\Models\BlogPost;
 use Illuminate\Support\Facades\Redirect;
 
-
 class BlogPostController extends Controller
 {
     /**
@@ -16,7 +15,15 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        return view('posts.list', ['posts' => BlogPost::all()]);
+        $order = request()->get('order');
+        if (!in_array($order, config('posts.order_types'))) {
+            $order = 'desc';
+        }
+
+        $posts_limit = config('posts.limit');
+        $posts = BlogPost::orderBy('created_at', $order)->paginate($posts_limit);
+
+        return view('posts.list', ['posts' =>  $posts]);
     }
 
     /**
