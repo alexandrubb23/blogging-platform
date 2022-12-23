@@ -1,1 +1,1 @@
-<a href="{{ route_to('post_view', $post->id)}}" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ $post->title }}</a>
+<a href="{{ route('posts.view', $post->id)}}" class="text-3xl font-bold hover:text-gray-700 pb-4">{{ $post->title }}</a>

@@ -16,8 +16,7 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        $posts = ['posts' => BlogPost::all()];
-        return view('posts.list', $posts);
+        return view('posts.list', ['posts' => BlogPost::all()]);
     }
 
     /**
@@ -27,8 +26,7 @@ class BlogPostController extends Controller
      */
     public function create()
     {
-        $view = config('routes.posts_create');
-        return view($view);
+        return view('posts.create');
     }
 
     /**
@@ -46,7 +44,7 @@ class BlogPostController extends Controller
             'user_id' => auth()->user()->id,
         ]);
 
-        return Redirect::route(config('routes.posts_create'))->with('status', 'post-created');
+        return Redirect::route('posts.create')->with('status', 'post-created');
     }
 
     /**
@@ -57,9 +55,6 @@ class BlogPostController extends Controller
      */
     public function show(BlogPost $id)
     {
-        $post = ['post' => $id];
-        $view = config('routes.post_view');
-
-        return view($view, $post);
+        return view('posts.view', ['post' => $id]);
     }
 }
