@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBlogPostRequest;
 use App\Models\BlogPost;
+use Illuminate\Support\Facades\Redirect;
+
 
 class BlogPostController extends Controller
 {
@@ -37,7 +39,14 @@ class BlogPostController extends Controller
      */
     public function store(StoreBlogPostRequest $request)
     {
-        //
+
+        BlogPost::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'user_id' => auth()->user()->id,
+        ]);
+
+        return Redirect::route(config('routes.posts_create'))->with('status', 'post-created');
     }
 
     /**

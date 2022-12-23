@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreBlogPostRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class StoreBlogPostRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return Auth::check();
     }
 
     /**
@@ -23,8 +24,9 @@ class StoreBlogPostRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $this->validateWithBag('createBlogPost', [
+            'title' => ['required', 'unique:blog_posts', 'min:3', 'max:1000'],
+            'description' => 'required',
+        ]);
     }
 }

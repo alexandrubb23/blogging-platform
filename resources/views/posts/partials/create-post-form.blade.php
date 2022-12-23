@@ -8,17 +8,16 @@
 
   <form method="post" action="{{ route('posts.store') }}" class="mt-6 space-y-6">
     @csrf
-    @method('post')
-
     <div>
       <x-input-label for="title" :value="__('Title')" />
       <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" autocomplete="title" />
-      <x-input-error :messages="$errors->updatePassword->get('title')" class="mt-2" />
+      <x-input-error :messages="$errors->createBlogPost->get('title')" class="mt-2" />
     </div>
 
     <div>
-      <x-input-label for="password_confirmation" :value="__('Description')" />
+      <x-input-label for="description" :value="__('Description')" />
       <x-forms.tinymce-editor />
+      <x-input-error :messages="$errors->createBlogPost->get('description')" class="mt-2" />
     </div>
 
     <div class="mt-6 flex items-center gap-4">

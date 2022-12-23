@@ -1,1 +1,1 @@
-<textarea class="tinymce-editor"></textarea>
+<textarea class="tinymce-editor" name="description"></textarea>
