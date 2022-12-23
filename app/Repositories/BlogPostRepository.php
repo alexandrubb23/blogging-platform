@@ -11,7 +11,7 @@ class BlogPostRepository implements BlogPostRepositoryInterface
   public function create(StoreBlogPostRequest $post)
   {
     return BlogPost::create([
-      'titlea' => $post->title,
+      'title' => $post->title,
       'description' => $post->description,
       'user_id' => auth()->user()->id,
     ]);
