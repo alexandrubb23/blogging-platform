@@ -24,4 +24,16 @@ return [
     */
 
   'order_types' => ['desc', 'asc'],
+
+  /*
+    |--------------------------------------------------------------------------
+    | Posts Limit Description
+    |--------------------------------------------------------------------------
+    |
+    |This value is used when the
+    | post should nit display the entiry description.
+    |
+    */
+
+  'limit_description' => 20,
 ];

@@ -7,9 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-// TODO: Move this to a config file
-const LIMIT_CHARACTERS = 20;
-
 class BlogPost extends Model
 {
     use HasFactory;
@@ -33,7 +30,7 @@ class BlogPost extends Model
 
     public function getShortDescriptionAttribute()
     {
-        return Str::words(strip_tags($this->description), LIMIT_CHARACTERS);
+        return Str::words(strip_tags($this->description), config('posts.limit_description'));
     }
 
     /**

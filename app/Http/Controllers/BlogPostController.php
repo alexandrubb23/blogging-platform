@@ -4,10 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBlogPostRequest;
 use App\Models\BlogPost;
+use App\Interfaces\BlogPostRepository;
+use App\Interfaces\BlogPostRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 
 class BlogPostController extends Controller
 {
+    /**
+     * @var BlogPostRepositoryInterface
+     */
+    private BlogPostRepositoryInterface $blogPostRepository;
+
+    /**
+     * Class constructor.
+     *
+     * @param BlogPostRepositoryInterface $blogPostRepository
+     */
+    public function __construct(BlogPostRepositoryInterface $blogPostRepository)
+    {
+        $this->blogPostRepository = $blogPostRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -44,13 +62,16 @@ class BlogPostController extends Controller
      */
     public function store(StoreBlogPostRequest $request)
     {
-        BlogPost::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'user_id' => auth()->user()->id,
-        ]);
+        $status = '-success';
 
-        return Redirect::route('posts.create')->with('status', 'post-created');
+        try {
+            $this->blogPostRepository->create($request);
+        } catch (\Exception $e) {
+            Log::error('Create post error: ' . $e->getMessage());
+            $status = '-error';
+        } finally {
+            return Redirect::route('posts.create')->with('status', 'post-create' . $status);
+        }
     }
 
     /**
