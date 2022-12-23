@@ -37,7 +37,6 @@ class BlogPostController extends Controller
      */
     public function store(StoreBlogPostRequest $request)
     {
-
         BlogPost::create([
             'title' => $request->title,
             'description' => $request->description,

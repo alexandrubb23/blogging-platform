@@ -24,9 +24,9 @@ class StoreBlogPostRequest extends FormRequest
      */
     public function rules()
     {
-        $this->validateWithBag('createBlogPost', [
-            'title' => ['required', 'unique:blog_posts', 'min:3', 'max:1000'],
+        return [
+            'title' => 'required|unique:blog_posts|min:3|max:1000',
             'description' => 'required',
-        ]);
+        ];
     }
 }
