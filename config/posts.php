@@ -1,5 +1,7 @@
 <?php
 
+$order = app()->runningInConsole() === false ? request()->get('order') : 'desc';
+
 return [
   /*
     |--------------------------------------------------------------------------
@@ -35,7 +37,7 @@ return [
     |
     */
 
-  'order_data' =>  match (request()->get('order')) {
+  'order_data' =>  match ($order) {
     'asc' => 'asc',
     'desc' => 'desc',
     default => 'desc',
