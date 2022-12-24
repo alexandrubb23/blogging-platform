@@ -54,6 +54,6 @@ class BlogPost extends Model
      */
     public function getFormattedDateAttribute()
     {
-        return Carbon::parse($this->created_at)->format('F jS, Y');
+        return Carbon::parse($this->created_at)->format(config('posts.date_format'));
     }
 }

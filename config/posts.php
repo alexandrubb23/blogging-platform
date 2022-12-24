@@ -52,4 +52,15 @@ return [
     */
 
   'limit_description' => 20,
+
+  /*
+    |--------------------------------------------------------------------------
+    | Posts Date Format
+    |--------------------------------------------------------------------------
+    |
+    | This value is used when the
+    | post shows the date when the post was crated.
+    |
+    */
+  'date_format' => 'F jS, Y'
 ];
