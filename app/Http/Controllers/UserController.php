@@ -12,7 +12,7 @@ class UserController extends Controller
     public function posts()
     {
         $posts = auth()->user()->posts->sortDesc();
-        $posts = paginate_collection($posts, 1);
+        $posts = paginate_collection($posts, config('posts.user_limit_results'));
 
         return view('user.posts', ['posts' => $posts]);
     }

@@ -33,7 +33,7 @@ class BlogPostController extends Controller
     public function index()
     {
         $order = config('posts.order_data');
-        $posts_limit = config('posts.limit');
+        $posts_limit = config('posts.limit_results');
 
         $posts = BlogPost::orderBy('created_at', $order)->paginate($posts_limit);
 

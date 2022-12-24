@@ -11,7 +11,19 @@ return [
     |
     */
 
-  'limit' => env('POSTS_PER_PAGE', 10),
+  'limit_results' => env('POSTS_PER_PAGE', 10),
+
+  /*
+    |--------------------------------------------------------------------------
+    | Limit User Posts Results
+    |--------------------------------------------------------------------------
+    |
+    | This value is will limit the user posts result. This value is used when the
+    | framework needs to list user blog posts.
+    |
+    */
+
+  'user_limit_results' => env('USER_POSTS_PER_PAGE', 10),
 
   /*
     |--------------------------------------------------------------------------
