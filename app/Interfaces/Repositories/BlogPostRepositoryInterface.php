@@ -2,6 +2,8 @@
 
 namespace App\Interfaces\Repositories;
 
+use App\Models\BlogPost;
+
 interface BlogPostRepositoryInterface
 {
   /**
@@ -9,7 +11,7 @@ interface BlogPostRepositoryInterface
    *
    * @param array $post
    * 
-   * @return void
+   * @return BlogPost
    */
-  public function create(array $post);
+  public function create(array $post): BlogPost;
 }

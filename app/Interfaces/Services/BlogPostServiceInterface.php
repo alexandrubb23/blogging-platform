@@ -2,6 +2,8 @@
 
 namespace App\Interfaces\Services;
 
+use App\Models\BlogPost;
+
 interface BlogPostServiceInterface
 {
   /**
@@ -9,7 +11,7 @@ interface BlogPostServiceInterface
    *
    * @param array $post
    * 
-   * @return string
+   * @return BlogPost
    */
-  public function create(array $post): string;
+  public function create(array $post): BlogPost|bool;
 }

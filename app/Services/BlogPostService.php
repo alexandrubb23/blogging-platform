@@ -3,16 +3,16 @@
 namespace App\Services;
 
 use App\Exceptions\BlogPostCanNotBeCreatedException;
-use App\Http\Requests\StoreBlogPostRequest;
 use App\Interfaces\Repositories\BlogPostRepositoryInterface;
 use App\Interfaces\Services\BlogPostServiceInterface;
+use App\Models\BlogPost;
 
 class BlogPostService implements BlogPostServiceInterface
 {
   /**
-   * @var string
+   * @var BlogPostRepositoryInterface
    */
-  private $status = 'success';
+  private BlogPostRepositoryInterface $blogPostRepository;
 
   /**
    * Class constructor.
@@ -27,15 +27,13 @@ class BlogPostService implements BlogPostServiceInterface
   /**
    * @inheritdoc
    */
-  public function create(array $post): string
+  public function create(array $post): BlogPost|false
   {
     try {
-      $this->blogPostRepository->create($post);
+      return $this->blogPostRepository->create($post);
     } catch (BlogPostCanNotBeCreatedException $exception) {
       report($exception);
-      $this->status = 'error';
+      return false;
     }
-
-    return '-' . $this->status;
   }
 }
