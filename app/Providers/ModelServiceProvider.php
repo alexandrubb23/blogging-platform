@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Interfaces\Repositories\BlogPostRepositoryInterface;
-use App\Repositories\BlogPostRepository;
+use App\Interfaces\Services\BlogPostServiceInterface;
+use App\Services\BlogPostService;
 use Illuminate\Support\ServiceProvider;
 
-class RepositoryServiceProvider extends ServiceProvider
+class ModelServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -15,7 +15,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(BlogPostRepositoryInterface::class, BlogPostRepository::class);
+        $this->app->bind(BlogPostServiceInterface::class, BlogPostService::class);
     }
 
     /**

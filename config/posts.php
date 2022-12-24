@@ -15,15 +15,19 @@ return [
 
   /*
     |--------------------------------------------------------------------------
-    | Posts Order Types
+    | Posts Order Type
     |--------------------------------------------------------------------------
     |
-    | This value is the order types. This value is used when the
-    | framework needs to list and order our blog posts.
+    | This value is the order type. This value is used when the
+    | framework needs to list and order desc or asc our blog posts.
     |
     */
 
-  'order_types' => ['desc', 'asc'],
+  'order_data' =>  match (request()->get('order')) {
+    'asc' => 'asc',
+    'desc' => 'desc',
+    default => 'desc',
+  },
 
   /*
     |--------------------------------------------------------------------------

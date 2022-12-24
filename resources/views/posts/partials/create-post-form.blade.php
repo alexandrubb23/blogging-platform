@@ -7,7 +7,7 @@
   </header>
 
   @if (session('status') === 'post-create-error')
-  <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 6000)" class="text-sm text-red-600">{{ __('An error occured.') }}</p>
+  <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 6000)" class="text-sm text-red-600">{{ __('Blog post can not be created. Please try again later.') }}</p>
   @endif
 
   <form method="post" action="{{ route('posts.store') }}" class="mt-6 space-y-6">
@@ -27,7 +27,7 @@
     <div class="mt-6 flex items-center gap-4">
       <x-primary-button>{{ __('Save') }}</x-primary-button>
 
-      @if (session('status') === 'post-create')
+      @if (session('status') === 'post-create-success')
       <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 6000)" class="text-sm text-green-600">{{ __('Post was created.') }}</p>
       @endif
     </div>
