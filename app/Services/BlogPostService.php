@@ -33,7 +33,8 @@ class BlogPostService implements BlogPostServiceInterface
       return $this->blogPostRepository->create($post);
     } catch (BlogPostCanNotBeCreatedException $exception) {
       report($exception);
-      return false;
     }
+
+    return false;
   }
 }
