@@ -12,7 +12,7 @@ class BlogPostService implements BlogPostServiceInterface
   /**
    * @var string
    */
-  private $status = '-success';
+  private $status = 'success';
 
   /**
    * Class constructor.
@@ -27,15 +27,15 @@ class BlogPostService implements BlogPostServiceInterface
   /**
    * @inheritdoc
    */
-  public function create(StoreBlogPostRequest $post): string
+  public function create(array $post): string
   {
     try {
       $this->blogPostRepository->create($post);
     } catch (BlogPostCanNotBeCreatedException $exception) {
       report($exception);
-      $this->status = '-error';
+      $this->status = 'error';
     }
 
-    return $this->status;
+    return '-' . $this->status;
   }
 }

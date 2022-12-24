@@ -22,12 +22,16 @@ class BlogPost extends Model
      * 
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * Get the post's short description.
+     * 
+     * @return string
+     */
     public function getShortDescriptionAttribute()
     {
         return Str::words(strip_tags($this->description), config('posts.limit_description'));
@@ -43,6 +47,11 @@ class BlogPost extends Model
         return Str::of($this->description)->toHtmlString();
     }
 
+    /**
+     * Get the post's created_at date in a human readable format.
+     * 
+     * @return string
+     */
     public function getFormattedDateAttribute()
     {
         return Carbon::parse($this->created_at)->format('F jS, Y');

@@ -58,7 +58,14 @@ class BlogPostController extends Controller
      */
     public function store(StoreBlogPostRequest $request)
     {
-        $status = $this->blogPostService->create($request);
+        $post = [
+            'title' => $request->title,
+            'description' => $request->description,
+            'user_id' => auth()->user()->id,
+        ];
+
+        $status = $this->blogPostService->create($post);
+
         return Redirect::route('posts.create')->with('status', 'post-create' . $status);
     }
 
