@@ -22,7 +22,7 @@ class AutoImportBlogPostsCommand extends Command
     protected $description = 'This is a command to import users blog posts.';
 
     /**
-     * BlogPostService instance.
+     * BlogPostRepository instance.
      * 
      * @var AutoImportBlogPostsService
      */

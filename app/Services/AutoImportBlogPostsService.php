@@ -3,23 +3,23 @@
 namespace App\Services;
 
 use Illuminate\Foundation\Inspiring;
-use App\Services\BlogPostService;
+use App\Repositories\BlogPostRepository;
 
 class AutoImportBlogPostsService
 {
     /**
-     * @var BlogPostService
+     * @var BlogPostRepository
      */
-    private BlogPostService $blogPostService;
+    private BlogPostRepository $blogPostRepository;
 
     /**
      * Class constructor.
      *
-     * @param BlogPostService $blogPostService
+     * @param BlogPostRepository $blogPostRepository
      */
-    public function __construct(BlogPostService $blogPostService)
+    public function __construct(BlogPostRepository $blogPostRepository)
     {
-        $this->blogPostService = $blogPostService;
+        $this->blogPostRepository = $blogPostRepository;
     }
 
     /**
@@ -30,7 +30,7 @@ class AutoImportBlogPostsService
      */
     public function import(): string
     {
-        return $this->blogPostService->create([
+        return $this->blogPostRepository->create([
             'title' => strip_tags(Inspiring::quote()),
             'description' => 'This is a test post.',
             'user_id' => 21

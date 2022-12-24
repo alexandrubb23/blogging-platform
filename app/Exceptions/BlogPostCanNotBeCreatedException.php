@@ -3,7 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
-
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
 class BlogPostCanNotBeCreatedException extends Exception
@@ -13,9 +13,9 @@ class BlogPostCanNotBeCreatedException extends Exception
     /**
      * Class constructor.
      */
-    public function __construct()
+    public function __construct(QueryException $ex)
     {
-        parent::__construct(self::CREATE_ERROR_MESSAGE);
+        parent::__construct($ex->getMessage());
     }
 
     /**

@@ -3,18 +3,19 @@
 namespace App\Services;
 
 use App\Interfaces\Repositories\BlogPostRepositoryInterface;
-use App\Interfaces\Services\BlogPostServiceInterface;
 
 class BlogPostAutoImportService
 {
+    private BlogPostRepositoryInterface $blogPostRepository;
+
     /**
      * Class constructor.
      *
      * @param BlogPostRepositoryInterface $blogPostRepository
      */
-    public function __construct(BlogPostServiceInterface $blogPostService)
+    public function __construct(BlogPostRepositoryInterface $blogPostRepository)
     {
-        $this->blogPostService = $blogPostService;
+        $this->blogPostRepository = $blogPostRepository;
     }
 
     /**
@@ -22,6 +23,6 @@ class BlogPostAutoImportService
      */
     public function create(array $post): void
     {
-        $this->blogPostService->create($post);
+        $this->blogPostRepository->create($post);
     }
 }

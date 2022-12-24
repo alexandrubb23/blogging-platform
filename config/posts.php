@@ -37,7 +37,7 @@ return [
     |
     */
 
-  'order_data' =>  match ($order) {
+  'order_type' =>  match ($order) {
     'asc' => 'asc',
     'desc' => 'desc',
     default => 'desc',

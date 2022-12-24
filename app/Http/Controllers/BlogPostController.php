@@ -2,27 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBlogPostRequest;
-use App\Models\BlogPost;
-use App\Interfaces\Repositories\BlogPostRepositoryInterface;
-use App\Interfaces\Services\BlogPostServiceInterface;
 use Illuminate\Support\Facades\Redirect;
 
+use App\Models\BlogPost;
+use App\Http\Requests\StoreBlogPostRequest;
+use App\Interfaces\Repositories\BlogPostRepositoryInterface;
+
+/**
+ * @property App\Interfaces\Repositories\BlogPostRepositoryInterface   $blogPostRepository
+ */
 class BlogPostController extends Controller
 {
     /**
-     * @var BlogPostServiceInterface
+     * @var BlogPostRepositoryInterface
      */
-    private BlogPostServiceInterface $blogPostService;
+    private BlogPostRepositoryInterface $blogPostRepository;
 
     /**
      * Class constructor.
      *
      * @param BlogPostRepositoryInterface $blogPostRepository
      */
-    public function __construct(BlogPostServiceInterface $blogPostService)
+    public function __construct(BlogPostRepositoryInterface $blogPostRepository)
     {
-        $this->blogPostService = $blogPostService;
+        $this->blogPostRepository = $blogPostRepository;
     }
 
     /**
@@ -32,10 +35,12 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        $order = config('posts.order_data');
+        $order = config('posts.order_type');
         $posts_limit = config('posts.limit_results');
 
-        $posts = BlogPost::orderBy('created_at', $order)->paginate($posts_limit);
+        $posts = $this->blogPostRepository
+            ->getAll($order)
+            ->paginate($posts_limit);
 
         return view('posts.list', ['posts' =>  $posts]);
     }
@@ -64,7 +69,7 @@ class BlogPostController extends Controller
             'user_id' => auth()->user()->id,
         ];
 
-        $newPost = $this->blogPostService->create($post);
+        $newPost = $this->blogPostRepository->create($post);
 
         return Redirect::route('posts.create')->with('post', $newPost);
     }

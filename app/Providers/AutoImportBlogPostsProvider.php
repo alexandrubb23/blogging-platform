@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Services\AutoImportBlogPostsService;
-use App\Services\BlogPostService;
+use App\Repositories\BlogPostRepository;
 
 class AutoImportBlogPostsProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class AutoImportBlogPostsProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(AutoImportBlogPostsService::class, BlogPostService::class);
+        $this->app->bind(AutoImportBlogPostsService::class, BlogPostRepository::class);
     }
 
     /**
