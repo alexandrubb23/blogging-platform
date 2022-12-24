@@ -16,7 +16,7 @@ class BlogPostRepository implements BlogPostRepositoryInterface
     try {
       return BlogPost::create($post);
     } catch (\Exception $ex) {
-      throw new BlogPostCanNotBeCreatedException('Blog post can not be created.');
+      throw new BlogPostCanNotBeCreatedException();
     }
   }
 }
