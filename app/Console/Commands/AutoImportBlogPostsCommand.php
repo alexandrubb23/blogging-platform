@@ -2,6 +2,9 @@
 
 namespace App\Console\Commands;
 
+use Exception;
+
+use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
 use Illuminate\Console\Command;
 use App\Services\AutoImportBlogPostsService;
 
@@ -19,7 +22,7 @@ class AutoImportBlogPostsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'This is a command to import users blog posts.';
+    protected $description = 'This is a command to auto import users blog posts from third party API\'s.';
 
     /**
      * BlogPostRepository instance.
@@ -36,6 +39,16 @@ class AutoImportBlogPostsCommand extends Command
     public function __construct(AutoImportBlogPostsService $autoImportPostsService)
     {
         parent::__construct();
+
+        if (!($autoImportPostsService instanceof AutoImportBlogPostsServiceInterface)) {
+            throw new Exception(
+                sprintf(
+                    "The %s must be an instance of %s.",
+                    AutoImportBlogPostsService::class,
+                    AutoImportBlogPostsServiceInterface::class
+                )
+            );
+        }
 
         $this->autoImportPostsService = $autoImportPostsService;
     }

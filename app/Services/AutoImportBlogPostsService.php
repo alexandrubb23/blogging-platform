@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
+use App\Models\BlogPost;
 use Illuminate\Foundation\Inspiring;
 use App\Repositories\BlogPostRepository;
 
-class AutoImportBlogPostsService
+class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
 {
     /**
      * @var BlogPostRepository
@@ -23,12 +25,9 @@ class AutoImportBlogPostsService
     }
 
     /**
-     * Create a new blog post.
-     *
-     * @param array $data
-     * @return string
+     * @inheritdoc
      */
-    public function import(): string
+    public function import(): BlogPost|false
     {
         return $this->blogPostRepository->create([
             'title' => strip_tags(Inspiring::quote()),
