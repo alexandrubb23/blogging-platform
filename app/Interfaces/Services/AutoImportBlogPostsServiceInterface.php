@@ -7,7 +7,7 @@ use App\Models\BlogPost;
 interface AutoImportBlogPostsServiceInterface
 {
   /**
-   * Create a new blog post.
+   * Import blog posts from external resources.
    *
    * @param array $data
    * @return void
