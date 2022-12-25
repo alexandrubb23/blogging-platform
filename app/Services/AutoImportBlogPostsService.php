@@ -58,7 +58,8 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
         foreach ($externalResources as $externalResource) {
             $this->externalResource = $externalResource;
 
-            $externalApiResult = $this->httpService->get($externalResource->apiUrl)->object();
+            $url = $externalResource->apiUrl;
+            $externalApiResult = $this->httpService->getAsObject($url);
 
             if (!$this->hasValidShape($externalApiResult)) {
                 $this->logInvalidShapeError($this->externalResource->apiUrl, $externalApiResult);
@@ -71,7 +72,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
             }
 
             foreach ($externalApiResult->articles as $article) {
-                if (!$this->hasValidArticlesShape($article)) {
+                if (!$this->hasValidArticleShape($article)) {
                     $this->logInvalidArticleShapeError($this->externalResource->apiUrl, $article);
                     continue;
                 }
