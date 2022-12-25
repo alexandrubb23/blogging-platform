@@ -2,26 +2,36 @@
 
 namespace App\Services;
 
+use App\Models\BlogPost;
+use App\Models\ExternalResourcesApi;
 use App\Repositories\BlogPostRepository;
+use App\Interfaces\Services\HttpServiceInterface;
 use App\Interfaces\Repositories\BlogPostRepositoryInterface;
 use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
-use App\Interfaces\Services\HttpServiceInterface;
-use App\Models\BlogPost;
+use App\Traits\Services\AutoImportBlogPosts\LogExternalResourceError;
+use App\Traits\Services\AutoImportBlogPosts\ValidateExternalResourceObjectShapes;
 
 class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
 {
-    // TODO: User model
-    private $user_id = 10;
+    /**
+     * Use utils traits.
+     */
+    use ValidateExternalResourceObjectShapes, LogExternalResourceError;
 
     /**
-     * @var BlogPostRepository
+     * @var App\Repositories\BlogPostRepository
      */
     private BlogPostRepository $blogPostRepository;
 
     /**
-     * @var HttpServiceInterface
+     * @var App\Interfaces\Services\HttpServiceInterface
      */
     private HttpServiceInterface $httpService;
+
+    /**
+     * @var App\Models\ExternalResourcesApi
+     */
+    private ExternalResourcesApi $externalResource;
 
     /**
      * Class constructor.
@@ -42,21 +52,33 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     public function import(): void
     {
-        // How do we know if the object shape is correct?
-        $result = $this->httpService->get('https://candidate-test.sq1.io/api.php')->object();
-        if ($result->status !== 'ok') return;
+        // TODO: Create a ExternalResourcesApi Repository.
+        $externalResources = ExternalResourcesApi::all();
 
-        // What if there are 1000 articles? We don't want to create 1000 queries.
-        // What if the article changes his title? We don't want to create a new post. We want to update the existing one, right?
-        // But how we know what the title is? We don't have a unique identifier for the article!
-        // Possible solution: 
-        // - Save the external article id in the database and use it to update the post.
-        // -- Look after external article id in the database.
-        // --- If exists, compare the title\description. 
-        // ---- If the title\description is different, update the post. 
-        // ----- If the title\description is the same, do nothing.
-        foreach ($result->articles as $article)
-            $this->updateOrCreatePost($article);
+        foreach ($externalResources as $externalResource) {
+            $this->externalResource = $externalResource;
+
+            $externalApiResult = $this->httpService->get($externalResource->apiUrl)->object();
+
+            if (!$this->hasValidShape($externalApiResult)) {
+                $this->logInvalidShapeError($this->externalResource->apiUrl, $externalApiResult);
+                return;
+            }
+
+            if ($externalApiResult->status !== 'ok') {
+                $this->logInvalidStatusError($this->externalResource->apiUrl, $externalApiResult);
+                return;
+            }
+
+            foreach ($externalApiResult->articles as $article) {
+                if (!$this->hasValidArticlesShape($article)) {
+                    $this->logInvalidArticleShapeError($this->externalResource->apiUrl, $article);
+                    continue;
+                }
+
+                $this->updateOrCreatePost($article);
+            }
+        }
     }
 
     /**
@@ -73,12 +95,12 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
             return;
         }
 
-        $titleAlreadyExists = $this->blogPostRepository->getByTitle($article->title);
-        if ($titleAlreadyExists) return;
+        $post = $this->blogPostRepository->getByTitle($article->title);
+        if ($post) return;
 
         $this->blogPostRepository->create([
             'title' => $article->title,
-            'user_id' => $this->user_id,
+            'user_id' => $this->externalResource->user_id,
             'description' => $article->description,
             'publishedAt' => getCurrentDateAndTime(),
             'external_post_id' => $externalPostId,
@@ -117,13 +139,14 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     }
 
     /**
-     * Get external post id with user id attached to it.
+     * Compose a unique external post id based on 
+     * user_id, api_id and external article id.
      * 
      * @param string $title
      * @return string
      */
     private function externalPostId(int $externalPostId): int
     {
-        return $this->user_id . $externalPostId;
+        return $this->externalResource->user_id . $this->externalResource->id . $externalPostId;
     }
 }
