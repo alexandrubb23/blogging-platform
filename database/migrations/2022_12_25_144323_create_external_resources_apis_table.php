@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('external_resources_apis', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->string('apiUrl');
+            $table->string('apiUrl')->unique();
             $table->timestamps();
 
             $table->index('user_id');
