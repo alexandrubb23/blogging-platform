@@ -19,6 +19,7 @@ return new class extends Migration
             $table->longText('description');
             $table->string('user_id');
             $table->index('user_id');
+            $table->dateTimeTz('publishedAt')->nullable();
             $table->timestamps();
         });
     }

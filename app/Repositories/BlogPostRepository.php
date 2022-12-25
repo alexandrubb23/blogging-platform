@@ -20,7 +20,7 @@ class BlogPostRepository implements BlogPostRepositoryInterface
   /**
    * @inheritdoc
    */
-  public function getAll(string $order): Builder
+  public function getAll(string $order = 'desc'): Builder
   {
     return BlogPost::orderBy('created_at', $order);
   }

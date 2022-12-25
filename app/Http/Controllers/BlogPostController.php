@@ -39,7 +39,7 @@ class BlogPostController extends Controller
         $posts_limit = config('posts.limit_results');
 
         $posts = $this->blogPostRepository
-            ->getAll($order)
+            ->getAll($order)->whereNotNull('publishedAt')
             ->paginate($posts_limit);
 
         return view('posts.list', ['posts' =>  $posts]);
@@ -80,8 +80,12 @@ class BlogPostController extends Controller
      * @param  \App\Models\Blog  $blog
      * @return \Illuminate\Http\Response
      */
-    public function show(BlogPost $id)
+    public function show(BlogPost $post)
     {
-        return view('posts.view', ['post' => $id]);
+        if (!$post->isPublished) {
+            abort(404);
+        }
+
+        return view('posts.view', ['post' => $post]);
     }
 }

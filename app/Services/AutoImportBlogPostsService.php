@@ -2,11 +2,12 @@
 
 namespace App\Services;
 
+use Illuminate\Foundation\Inspiring;
+
+use App\Models\BlogPost;
+use App\Repositories\BlogPostRepository;
 use App\Interfaces\Repositories\BlogPostRepositoryInterface;
 use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
-use App\Models\BlogPost;
-use Illuminate\Foundation\Inspiring;
-use App\Repositories\BlogPostRepository;
 
 class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
 {
@@ -31,9 +32,10 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     public function import(): BlogPost|false
     {
         return $this->blogPostRepository->create([
+            'user_id' => 10,
             'title' => strip_tags(Inspiring::quote()),
             'description' => 'This is a test post.',
-            'user_id' => 21
+            'publishedAt' => getCurrentDateAndTime(),
         ]);
     }
 }
