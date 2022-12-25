@@ -67,7 +67,8 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     private function updateOrCreatePost(object $article)
     {
-        if ($existingPost = $this->getPostByExternalId($article->id)) {
+        $externalPostId = $this->externalPostId($article->id);
+        if ($existingPost = $this->getPostByExternalId($externalPostId)) {
             $this->update($article, $existingPost);
             return;
         }
@@ -80,7 +81,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
             'user_id' => $this->user_id,
             'description' => $article->description,
             'publishedAt' => getCurrentDateAndTime(),
-            'external_post_id' => $this->user_id . $article->id,
+            'external_post_id' => $externalPostId,
         ]);
     }
 
@@ -112,6 +113,17 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     private function getPostByExternalId(int $externalPostId): ?BlogPost
     {
-        return $this->blogPostRepository->getByExternalPostId($this->user_id . $externalPostId);
+        return $this->blogPostRepository->getByExternalPostId($externalPostId);
+    }
+
+    /**
+     * Get external post id with user id attached to it.
+     * 
+     * @param string $title
+     * @return string
+     */
+    private function externalPostId(int $externalPostId): int
+    {
+        return $this->user_id . $externalPostId;
     }
 }
