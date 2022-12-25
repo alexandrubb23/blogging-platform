@@ -10,7 +10,7 @@ interface AutoImportBlogPostsServiceInterface
    * Create a new blog post.
    *
    * @param array $data
-   * @return App\Models\BlogPost|bool
+   * @return void
    */
-  public function import(): BlogPost|bool;
+  public function import(): void;
 }

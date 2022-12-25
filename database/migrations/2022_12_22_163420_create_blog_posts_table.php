@@ -17,10 +17,13 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->string('user_id');
-            $table->index('user_id');
+            $table->integer('user_id');
+            $table->integer('external_post_id')->nullable();
             $table->dateTimeTz('publishedAt')->nullable();
             $table->timestamps();
+
+            $table->index('user_id');
+            $table->index('external_post_id');
         });
     }
 

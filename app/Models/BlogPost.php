@@ -15,7 +15,8 @@ class BlogPost extends Model
         'title',
         'description',
         'user_id',
-        'publishedAt'
+        'publishedAt',
+        'external_post_id'
     ];
 
     /**
