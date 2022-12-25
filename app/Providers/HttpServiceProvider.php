@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
+use App\Interfaces\Services\HttpServiceInterface;
+use App\Services\HttpService;
 use Illuminate\Support\ServiceProvider;
-use App\Services\AutoImportBlogPostsService;
-use App\Repositories\BlogPostRepository;
 
-class AutoImportBlogPostsProvider extends ServiceProvider
+class HttpServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -15,7 +15,7 @@ class AutoImportBlogPostsProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(AutoImportBlogPostsService::class, BlogPostRepository::class);
+        $this->app->bind(HttpServiceInterface::class, HttpService::class);
     }
 
     /**
