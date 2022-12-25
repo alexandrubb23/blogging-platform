@@ -21,7 +21,7 @@ interface BlogPostRepositoryInterface
    *
    * @param array $post
    * 
-   * @return BlogPost
+   * @return App\Models\BlogPost|bool
    */
   public function create(array $post): BlogPost|bool;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Interfaces\Repositories\BlogPostRepositoryInterface;
 use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
 use App\Models\BlogPost;
 use Illuminate\Foundation\Inspiring;
@@ -17,9 +18,9 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     /**
      * Class constructor.
      *
-     * @param BlogPostRepository $blogPostRepository
+     * @param App\Interfaces\Repositories\BlogPostRepositoryInterface $blogPostRepository
      */
-    public function __construct(BlogPostRepository $blogPostRepository)
+    public function __construct(BlogPostRepositoryInterface $blogPostRepository)
     {
         $this->blogPostRepository = $blogPostRepository;
     }
