@@ -81,7 +81,7 @@ sail up
 
 ### Database migrations
 
-Migrations are like version control for our database, allowing your team to define and share the application's database schema definition
+Migrations are like version control for our database, allowing our team to define and share the application's database schema definition
 
 To run all of ours outstanding `migrations`, execute the migrate Artisan command:
 
@@ -89,7 +89,7 @@ To run all of ours outstanding `migrations`, execute the migrate Artisan command
 sail artisan migrate
 ```
 
-For more details, pelase visit [Database: Migrations](https://laravel.com/docs/9.x/migrations)
+For more details, please visit [Database: Migrations](https://laravel.com/docs/9.x/migrations)
 
 Once the migration is finished, we can open our [project](http://localhost) in our favorite browser.
 
@@ -130,10 +130,11 @@ User roles can be also implemented.
 -   Admins can review and approve posts.
 -   Admin can edit or delete post(s)
 -   Admins can add external resources for some certain users..
+-   And more...
 
 ### Organise views
 
-I would love to have more time in order to organize a bit better views: layouts; components; etc.
+I would love to have more time in order to organize a bit better the views: layouts; components; etc.
 
 ## In a Real World scenario
 
