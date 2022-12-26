@@ -20,7 +20,7 @@ class ExternalResourcesApiFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'apiUrl' => 'https://candidate-test.sq1.io/api.php'
+            'api_url' => 'https://candidate-test.sq1.io/api.php'
         ];
     }
 }

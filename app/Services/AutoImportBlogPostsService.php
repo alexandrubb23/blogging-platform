@@ -65,22 +65,22 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
         foreach ($externalResources as $externalResource) {
             $this->externalResource = $externalResource;
 
-            $url = $externalResource->apiUrl;
-            $externalApiResult = $this->httpService->getAsObject($url);
+            $api_url = $this->externalResource->api_url;
+            $externalApiResult = $this->httpService->getAsObject($api_url);
 
             if (!$this->hasValidShape($externalApiResult)) {
-                $this->logInvalidShapeError($this->externalResource->apiUrl, $externalApiResult);
+                $this->logInvalidShapeError($api_url, $externalApiResult);
                 return;
             }
 
             if ($externalApiResult->status !== 'ok') {
-                $this->logInvalidStatusError($this->externalResource->apiUrl, $externalApiResult);
+                $this->logInvalidStatusError($api_url, $externalApiResult);
                 return;
             }
 
             foreach ($externalApiResult->articles as $article) {
                 if (!$this->hasValidArticleShape($article)) {
-                    $this->logInvalidArticleShapeError($this->externalResource->apiUrl, $article);
+                    $this->logInvalidArticleShapeError($api_url, $article);
                     continue;
                 }
 

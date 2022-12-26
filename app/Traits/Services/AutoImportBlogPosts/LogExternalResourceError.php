@@ -6,45 +6,55 @@ use Illuminate\Support\Facades\Log;
 
 trait LogExternalResourceError
 {
-    protected function logInvalidStatusError(string $apiUrl, object $result): void
+    /**
+     * Log invalid status error.
+     * 
+     * @param string $api_url
+     * @param object $result
+     * @return void
+     */
+    protected function logInvalidStatusError(string $api_url, object $result): void
     {
         $this->logError(sprintf(
             'External resource API "%s" returned an invalid status.',
-            $apiUrl,
+            $api_url,
         ), $result);
     }
 
     /**
      * Log invalid shape error.
      * 
+     * @param string $api_url
      * @param object $result
      * @return void
      */
-    protected function logInvalidShapeError(string $apiUrl, object $result): void
+    protected function logInvalidShapeError(string $api_url, object $result): void
     {
         $this->logError(sprintf(
             'External resource API "%s" returned an invalid shape.',
-            $apiUrl
+            $api_url
         ), $result);
     }
 
     /**
      * Log invalid articles shape error.
      * 
+     * @param string $api_url
      * @param object $result
      * @return void
      */
-    protected function logInvalidArticleShapeError(string $apiUrl, object $article): void
+    protected function logInvalidArticleShapeError(string $api_url, object $article): void
     {
         $this->logError(sprintf(
             'External resource API "%s" returned an invalid article shape.',
-            $apiUrl
+            $api_url
         ), $article);
     }
 
     /**
      * Log external api error.
      * 
+     * @param string $api_url
      * @param object $result
      * @return void
      */
