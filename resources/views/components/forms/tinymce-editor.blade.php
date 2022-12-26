@@ -1,1 +1,1 @@
-<textarea class="tinymce-editor" name="description"></textarea>
+<textarea class="tinymce-editor" {!! $attributes->merge(['class' => 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm']) !!}>{!! $attributes['value'] !!}</textarea>

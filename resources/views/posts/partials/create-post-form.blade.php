@@ -14,13 +14,13 @@
     @csrf
     <div>
       <x-input-label for="title" :value="__('Title')" />
-      <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" autocomplete="title" />
+      <x-text-input value="{{ old('title') }}" id="title" name="title" type="text" class="mt-1 block w-full" autocomplete="title" />
       <x-input-error :messages="$errors->get('title')" class="mt-2" />
     </div>
 
     <div>
       <x-input-label for="description" :value="__('Description')" />
-      <x-forms.tinymce-editor />
+      <x-forms.tinymce-editor name="description" value="{{ old('description') }}" />
       <x-input-error :messages="$errors->get('description')" class="mt-2" />
     </div>
 
