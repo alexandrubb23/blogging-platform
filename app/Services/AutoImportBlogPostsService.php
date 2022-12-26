@@ -58,35 +58,54 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     /**
      * @inheritdoc
      */
-    public function import(): void
+    public final function import(): void
     {
         $externalResources = $this->externalResourceRepository->getAll();
+        foreach ($externalResources as $externalResource)
+            $this->importPostsFrom($externalResource);
+    }
 
-        foreach ($externalResources as $externalResource) {
-            $this->externalResource = $externalResource;
+    /**
+     * Import posts from external resource.
+     * 
+     * @param App\Models\ExternalResourcesApi $externalResource
+     * @return void
+     */
+    private function importPostsFrom(ExternalResourcesApi $externalResource): void
+    {
+        $this->externalResource = $externalResource;
 
-            $api_url = $this->externalResource->api_url;
-            $externalApiResult = $this->httpService->getAsObject($api_url);
+        $api_url = $this->externalResource->api_url;
+        $externalApiResult = $this->httpService->getAsObject($api_url);
 
-            if (!$this->hasValidShape($externalApiResult)) {
-                $this->logInvalidShapeError($api_url, $externalApiResult);
-                return;
-            }
-
-            if ($externalApiResult->status !== 'ok') {
-                $this->logInvalidStatusError($api_url, $externalApiResult);
-                return;
-            }
-
-            foreach ($externalApiResult->articles as $article) {
-                if (!$this->hasValidArticleShape($article)) {
-                    $this->logInvalidArticleShapeError($api_url, $article);
-                    continue;
-                }
-
-                $this->updateOrCreatePost($article);
-            }
+        if (!$this->hasValidShape($externalApiResult)) {
+            $this->logInvalidShapeError($api_url, $externalApiResult);
+            return;
         }
+
+        if ($externalApiResult->status !== 'ok') {
+            $this->logInvalidStatusError($api_url, $externalApiResult);
+            return;
+        }
+
+        foreach ($externalApiResult->articles as $article)
+            $this->importExternalPost($article);
+    }
+
+    /**
+     * Import a single article.
+     * 
+     * @param object $article
+     * @return void
+     */
+    private function importExternalPost(object $article): void
+    {
+        if (!$this->hasValidArticleShape($article)) {
+            $this->logInvalidArticleShapeError($this->externalResource->api_url, $article);
+            return;
+        }
+
+        $this->updateOrCreatePost($article);
     }
 
     /**
