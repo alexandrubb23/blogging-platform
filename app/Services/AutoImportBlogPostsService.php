@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use App\Models\BlogPost;
-use App\Models\ExternalResourcesApi;
-use App\Repositories\BlogPostRepository;
 use App\Interfaces\Services\HttpServiceInterface;
 use App\Interfaces\Repositories\BlogPostRepositoryInterface;
+use App\Interfaces\Repositories\ExternalResourcesRepositoryInterface;
 use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
+use App\Models\ExternalResourcesApi;
 use App\Traits\Services\AutoImportBlogPosts\LogExternalResourceError;
 use App\Traits\Services\AutoImportBlogPosts\ValidateExternalResourceObjectShapes;
 
@@ -19,9 +19,9 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     use ValidateExternalResourceObjectShapes, LogExternalResourceError;
 
     /**
-     * @var App\Repositories\BlogPostRepository
+     * @var App\Interfaces\Repositories\BlogPostRepositoryInterface
      */
-    private BlogPostRepository $blogPostRepository;
+    private BlogPostRepositoryInterface $blogPostRepository;
 
     /**
      * @var App\Interfaces\Services\HttpServiceInterface
@@ -34,17 +34,25 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     private ExternalResourcesApi $externalResource;
 
     /**
+     * @var App\Interfaces\Repositories\ExternalResourcesRepositoryInterface
+     */
+    private ExternalResourcesRepositoryInterface $externalResourcesRepository;
+
+    /**
      * Class constructor.
      *
      * @param App\Interfaces\Repositories\BlogPostRepositoryInterface $blogPostRepository
      * @param App\Interfaces\Services\HttpServiceInterface $httpService
+     * @param App\Interfaces\Repositories\ExternalResourcesRepositoryInterface $externalResourcesRepository
      */
     public function __construct(
         BlogPostRepositoryInterface $blogPostRepository,
-        HttpServiceInterface $httpService
+        HttpServiceInterface $httpService,
+        ExternalResourcesRepositoryInterface $externalResourcesRepository
     ) {
-        $this->blogPostRepository = $blogPostRepository;
         $this->httpService = $httpService;
+        $this->blogPostRepository = $blogPostRepository;
+        $this->externalResourceRepository = $externalResourcesRepository;
     }
 
     /**
@@ -52,8 +60,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     public function import(): void
     {
-        // TODO: Create a ExternalResourcesApi Repository.
-        $externalResources = ExternalResourcesApi::all();
+        $externalResources = $this->externalResourceRepository->getAll();
 
         foreach ($externalResources as $externalResource) {
             $this->externalResource = $externalResource;
