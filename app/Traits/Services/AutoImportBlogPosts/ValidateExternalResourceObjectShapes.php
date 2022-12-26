@@ -33,7 +33,7 @@ trait ValidateExternalResourceObjectShapes
      */
     protected function hasValidShape($result): bool
     {
-        return $this->propertyExists($this->externalResourceShape, $result);
+        return $this->validateObjectShape($this->externalResourceShape, $result);
     }
 
     /**
@@ -44,7 +44,7 @@ trait ValidateExternalResourceObjectShapes
      */
     protected function hasValidArticleShape(object $article): bool
     {
-        return $this->propertyExists($this->articleShape, $article);
+        return $this->validateObjectShape($this->articleShape, $article);
     }
 
     /**
@@ -53,7 +53,7 @@ trait ValidateExternalResourceObjectShapes
      * @param object $result
      * @return bool
      */
-    private function propertyExists(array $properties, object $result)
+    private function validateObjectShape(array $properties, object $result)
     {
         foreach ($properties as $property)
             if (!property_exists($result, $property)) return false;
