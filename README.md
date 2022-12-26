@@ -1,66 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Blogging Platform
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A customer approached us to build a web blogging platform according with the request.
 
-## About Laravel
+## Prerequisite
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+In order to run the app on our local machines, we will need to have [Docker](https://docs.docker.com/) installed.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Docker
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Please visit [Docker page](https://www.docker.com/products/docker-desktop/) and `Download Docker Desktop` according with your OS (Operating System).
 
-## Learning Laravel
+## Setup the project
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Once we have installed `Docker`, we can proceed with the setup in order to run the project on our local machine.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Clone the project
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Please open your terminal and type:
 
-## Laravel Sponsors
+```bash
+git clone https://github.com/alexandrubb23/blogging-platform.git
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+_Note: Please make sure you have git installed._
 
-### Premium Partners
+Once we have cloned the project, we will need to navigate into the newly created project folder:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```bash
+cd blogging-platform
+```
 
-## Contributing
+### Install dependencies
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+You may install the application's dependencies by navigating to the application's directory and executing the following command. This command uses a small Docker container containing PHP and Composer to install the application's dependencies:
 
-## Code of Conduct
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php81-composer:latest \
+    composer install --ignore-platform-reqs
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Please be patience and play a Pac-Man game while the instalation is running...
 
-## Security Vulnerabilities
+## Run the project
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Given that this project was builded with [Laravel Sail](https://laravel.com/docs/9.x/sail#introduction) we can use the `sail` command line interface
 
-## License
+### Creating the environment variables
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+In order to instruct our app about environment variables, please type in your terminal the following command:
+
+```bash
+cp .env.example .env
+```
+
+### Configuring A Shell Alias
+
+By default, Sail commands are invoked using the `vendor/bin/sail` script that is included with all new Laravel applications:
+
+```bash
+./vendor/bin/sail up
+```
+
+However, instead of repeatedly typing vendor/bin/sail to execute Sail commands, you may wish to configure a shell alias that allows you to execute Sail's commands more easily:
+
+```bash
+alias sail='[ -f sail ] && sh sail || sh vendor/bin/sail'
+```
+
+Note: To make sure this is always available, you may add this to your shell configuration file in your home directory, such as `~/.zshrc` or `~/.bashrc`, and then restart your shell.
+
+Once the shell alias has been configured, you may execute Sail commands by simply typing sail. The remainder of this documentation's examples will assume that you have configured this alias:
+
+```
+sail up
+```
+
+### Database migrations
+
+Migrations are like version control for our database, allowing your team to define and share the application's database schema definition
+
+To run all of ours outstanding `migrations`, execute the migrate Artisan command:
+
+```bash
+sail artisan migrate
+```
+
+For more details, pelase visit [Database: Migrations](https://laravel.com/docs/9.x/migrations)
+
+Once the migration is finished, we can open our [project](http://localhost) in our favorite browser.
+
+### Seed database with dummy data
+
+Given that this is a dummy APP, we will also need to have our tables populated with some dummy data:
+
+```bash
+sail artisan migrate:refresh --seed
+```
+
+### Auto import posts from an external resource
+
+Our APP can deal with data from external resources (just one for this assignment) by auto-importing articles from third party API's
+
+```bash
+sail artisan schedule:work
+```
+
+By default this schedule will run at every minute and try to execute `commands` if they are defined. In our case we have a command called `posts:import` which will import articles from an external API at every hour.
+
+## Testing our APP
+
+Our APP is (or will) covered with tests. In order to run automated tests, please type in your terminal the following command:
+
+```bash
+sail artisan test
+```
+
+## Wishes (real world)
+
+I wish I had more time in order to bring this APP to the next level. Please bear with me: it is just a dummy APP.
+
+### User roles
+
+User roles can be also implemented.
+
+-   Admins can review and approve posts.
+-   Admin can edit or delete post(s)
+-   Admins can add external resources for some certain users..
+
+### Organise views
+
+I would love to have more time in order to organize a bit better views: layouts; components; etc.
+
+## In a Real World scenario
+
+So far the objective of this assignment is to give you an idea of how I interpret a brief, approach a problem and structure an application. In a real world scenario I won't never used Laravel Blade template. I would like to use a FE library such as: React; Vue or Angular (if the case) instead.
+
+For the backend part, I would like to use Node ([Strapi CMS](https://strapi.io/), [Express](https://expressjs.com/) or [NestJS](https://nestjs.com/)) for building an API and, maybe [Laravel](https://laravel.com/) or [Symfony](https://symfony.com/).
+
+And last but not least, I would like to structure this app using Microservices Architecture and deploy them using [Kubernetes](https://kubernetes.io/).
+
+That being said,
+
+See you on the other side.
+
+Thank you!
