@@ -25,8 +25,8 @@ class StoreBlogPostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|unique:blog_posts|min:3|max:1000',
-            'description' => 'required',
+            'title' => 'required|unique:blog_posts|min:3|max:255',
+            'description' => 'required|min:3',
         ];
     }
 }
