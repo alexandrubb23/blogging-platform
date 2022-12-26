@@ -31,7 +31,7 @@ trait ValidateExternalResourceObjectShapes
      * @param object $result
      * @return bool
      */
-    protected function hasValidShape($result): bool
+    public final function hasValidShape($result): bool
     {
         return $this->validateObjectShape($this->externalResourceShape, $result);
     }
@@ -42,7 +42,7 @@ trait ValidateExternalResourceObjectShapes
      * @param object $result
      * @return bool
      */
-    protected function hasValidArticleShape(object $article): bool
+    public final function hasValidArticleShape(object $article): bool
     {
         return $this->validateObjectShape($this->articleShape, $article);
     }
