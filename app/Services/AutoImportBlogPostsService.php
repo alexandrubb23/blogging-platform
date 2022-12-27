@@ -118,12 +118,12 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     {
         $externalPostId = $this->externalPostId($article->id);
         if ($existingPost = $this->getPostByExternalId($externalPostId)) {
-            $this->update($article, $existingPost);
+            $this->update($existingPost, $article);
             return;
         }
 
-        $post = $this->blogPostRepository->getByTitle($article->title);
-        if ($post) return;
+        $postAlreadyExist = $this->blogPostRepository->getByTitle($article->title);
+        if ($postAlreadyExist) return;
 
         $this->blogPostRepository->create([
             'title' => $article->title,
@@ -140,7 +140,19 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param \App\Models\BlogPost $post
      * @return void
      */
-    private function update(object $article, BlogPost $existingPost)
+    private function update(BlogPost $existingPost, object $article): void
+    {
+        if ($post = $this->postShouldBeUpdated($existingPost, $article))
+            $this->blogPostRepository->update($post);
+    }
+
+    /**
+     * Check if post should be updated.
+     * 
+     * @param \App\Models\BlogPost $post
+     * @return array|bool
+     */
+    private function postShouldBeUpdated(BlogPost $existingPost, object $article): array|bool
     {
         $post = ['id' => $existingPost->id];
 
@@ -150,8 +162,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
         if (strip_tags($existingPost->description) !== strip_tags($article->description))
             $post['description'] = $article->description;
 
-        if (count($post) > 1)
-            $this->blogPostRepository->update($post);
+        return count($post) > 1 ? $post : false;
     }
 
     /**

@@ -98,6 +98,12 @@ Once the migration is finished, we can open our [project](http://localhost) in o
 Given that this is a dummy APP, we will also need to have our tables populated with some dummy data:
 
 ```bash
+sail artisan db:seed
+```
+
+or
+
+```bash
 sail artisan migrate:refresh --seed
 ```
 
