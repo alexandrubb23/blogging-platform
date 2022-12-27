@@ -52,7 +52,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     ) {
         $this->httpService = $httpService;
         $this->blogPostRepository = $blogPostRepository;
-        $this->externalResourceRepository = $externalResourcesRepository;
+        $this->externalResourcesRepository = $externalResourcesRepository;
     }
 
     /**
@@ -60,7 +60,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     public final function import(): void
     {
-        $externalResources = $this->externalResourceRepository->getAll();
+        $externalResources = $this->externalResourcesRepository->getAll();
         foreach ($externalResources as $externalResource)
             $this->importPostsFrom($externalResource);
     }
