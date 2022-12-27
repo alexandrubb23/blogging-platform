@@ -41,6 +41,7 @@ class ValidateExternalResourceObjectShapesTest extends TestCase
         $this->result->id = 1;
         $this->result->title = 'title';
         $this->result->description = 'description';
+        $this->result->publishedAt = '2021-01-01T00:00:00Z';
 
         $hasValidShape = $this->validateExternalResourceShape->hasValidArticleShape($this->result);
 

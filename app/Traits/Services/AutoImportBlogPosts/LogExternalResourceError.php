@@ -52,6 +52,21 @@ trait LogExternalResourceError
     }
 
     /**
+     * Log invalid articles error.
+     * 
+     * @param string $api_url
+     * @param object $result
+     * @return void
+     */
+    protected function logInvalidArticlesError(string $api_url, object $result): void
+    {
+        $this->logError(sprintf(
+            'External resource API "%s" returned an invalid articles shape.',
+            $api_url
+        ), $result);
+    }
+
+    /**
      * Log external api error.
      * 
      * @param string $api_url

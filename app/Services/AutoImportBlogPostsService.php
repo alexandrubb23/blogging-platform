@@ -88,6 +88,11 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
             return;
         }
 
+        if (!is_array($externalApiResult->articles)) {
+            $this->logInvalidArticlesError($api_url, $externalApiResult);
+            return;
+        }
+
         foreach ($externalApiResult->articles as $article)
             $this->importExternalPost($article);
     }
