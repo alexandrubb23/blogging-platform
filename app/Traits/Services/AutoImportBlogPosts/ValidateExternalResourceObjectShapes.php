@@ -23,6 +23,7 @@ trait ValidateExternalResourceObjectShapes
         'id',
         'title',
         'description',
+        'publishedAt'
     ];
 
     /**

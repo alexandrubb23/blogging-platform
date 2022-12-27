@@ -129,7 +129,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
             'title' => $article->title,
             'user_id' => $this->externalResource->user_id,
             'description' => $article->description,
-            'publishedAt' => getCurrentDateAndTime(),
+            'publishedAt' => parseISO8601ToDateAndTime($article->publishedAt),
             'external_post_id' => $externalPostId,
         ]);
     }
