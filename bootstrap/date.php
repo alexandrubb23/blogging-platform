@@ -19,7 +19,7 @@ function getCurrentDateAndTime(): string
  * @param string $timeZone
  * @return string
  */
-function parseISO8601ToDateAndTime($date, $timeZone = 'UTC'): string
+function parseISO8601ToDateAndTime($date, $format = 'Y-m-d H:i:s', $timeZone = 'UTC'): string
 {
-    return Carbon::parse($date)->setTimezone($timeZone)->format('Y-m-d H:i:s');
+    return Carbon::parse($date)->setTimezone($timeZone)->format($format);
 }
