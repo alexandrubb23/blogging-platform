@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\HttpService;
 use App\Models\ExternalResourcesApi;
-use Tests\Helpers\Services\AutoImportPostsHelper;
+use Tests\Helpers\Services\AutoImportBlogPostsHelper;
 
-$response = AutoImportPostsHelper::factoryResponse();
+$response = AutoImportBlogPostsHelper::factoryResponse();
 
 beforeEach(function () use ($response) {
     Log::spy();
@@ -18,14 +18,14 @@ beforeEach(function () use ($response) {
     });
 
     ExternalResourcesApi::factory()->create([
-        'api_url' => AutoImportPostsHelper::API_URL
+        'api_url' => AutoImportBlogPostsHelper::API_URL
     ]);
 });
 
 afterEach(function () use ($response) {
     $response->status = 'ok';
     $response->count = 1;
-    $response->articles = [AutoImportPostsHelper::factoryArticle()];
+    $response->articles = [AutoImportBlogPostsHelper::factoryArticle()];
 
     ExternalResourcesApi::truncate();
 });
@@ -33,89 +33,89 @@ afterEach(function () use ($response) {
 it('should call logInvalidShapeError and log the error if the status is missing from the response', function () use ($response) {
     unset($response->status);
 
-    AutoImportPostsHelper::importExternalResource();
+    AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportPostsHelper::errorMessageInvalidResponseShape($response);
-    AutoImportPostsHelper::logErrorHaveBeenCalledWith($message);
+    $message = AutoImportBlogPostsHelper::errorMessageInvalidResponseShape($response);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
 });
 
 it('should call logInvalidStatusError and log the error if the status is not equal with ok', function () use ($response) {
     $response->status = 'fail';
 
-    AutoImportPostsHelper::importExternalResource();
+    AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportPostsHelper::errorMessageInvalidResponseStatus($response);
-    AutoImportPostsHelper::logErrorHaveBeenCalledWith($message);
+    $message = AutoImportBlogPostsHelper::errorMessageInvalidResponseStatus($response);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
 });
 
 it('should call logInvalidShapeError and log the error if the articles is missing from the response', function () use ($response) {
     unset($response->articles);
 
-    AutoImportPostsHelper::importExternalResource();
+    AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportPostsHelper::errorMessageInvalidResponseShape($response);
-    AutoImportPostsHelper::logErrorHaveBeenCalledWith($message);
+    $message = AutoImportBlogPostsHelper::errorMessageInvalidResponseShape($response);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
 });
 
 it('should call logInvalidArticlesError and log the error if the articles is not an array', function () use ($response) {
     $response->articles = '#';
 
-    AutoImportPostsHelper::importExternalResource();
+    AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportPostsHelper::errorMessageInvalidArticlesShape($response);
-    AutoImportPostsHelper::logErrorHaveBeenCalledWith($message);
+    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticlesShape($response);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
 });
 
 it('should call logInvalidArticleShapeError and log the error if the article is missing the id', function () use ($response) {
     unset($response->articles[0]->id);
 
-    AutoImportPostsHelper::importExternalResource();
+    AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
-    AutoImportPostsHelper::logErrorHaveBeenCalledWith($message);
+    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
 });
 
 it('should call logInvalidArticleShapeError and log the error if the article is missing the title', function () use ($response) {
     unset($response->articles[0]->title);
 
-    AutoImportPostsHelper::importExternalResource();
+    AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
-    AutoImportPostsHelper::logErrorHaveBeenCalledWith($message);
+    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
 });
 
 it('should call logInvalidArticleShapeError and log the error if the article is missing the description', function () use ($response) {
     unset($response->articles[0]->description);
 
-    AutoImportPostsHelper::importExternalResource();
+    AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
-    AutoImportPostsHelper::logErrorHaveBeenCalledWith($message);
+    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
 });
 
 it('should call logInvalidArticleShapeError and log the error if the article is missing the publishedAt', function () use ($response) {
     unset($response->articles[0]->publishedAt);
 
-    AutoImportPostsHelper::importExternalResource();
+    AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
-    AutoImportPostsHelper::logErrorHaveBeenCalledWith($message);
+    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
 });
 
 // TODO: Tests Create or update posts....

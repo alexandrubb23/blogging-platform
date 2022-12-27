@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\AutoImportBlogPostsService;
 
-class AutoImportPostsHelper
+class AutoImportBlogPostsHelper
 {
     public const API_URL = 'https://test.com';
 
@@ -16,7 +16,7 @@ class AutoImportPostsHelper
         $response = new stdClass();
         $response->status = 'ok';
         $response->count = 1;
-        $response->articles = [AutoImportPostsHelper::factoryArticle()];
+        $response->articles = [AutoImportBlogPostsHelper::factoryArticle()];
 
         return $response;
     }
@@ -40,7 +40,7 @@ class AutoImportPostsHelper
     {
         return sprintf(
             'External resource API "%s" returned an invalid shape. Response: %s',
-            AutoImportPostsHelper::API_URL,
+            AutoImportBlogPostsHelper::API_URL,
             json_encode($response)
         );
     }
@@ -49,7 +49,7 @@ class AutoImportPostsHelper
     {
         return sprintf(
             'External resource API "%s" returned an invalid status. Response: %s',
-            AutoImportPostsHelper::API_URL,
+            AutoImportBlogPostsHelper::API_URL,
             json_encode($response)
         );
     }
@@ -58,7 +58,7 @@ class AutoImportPostsHelper
     {
         return sprintf(
             'External resource API "%s" returned an invalid article shape. Response: %s',
-            AutoImportPostsHelper::API_URL,
+            AutoImportBlogPostsHelper::API_URL,
             json_encode($response)
         );
     }
@@ -67,7 +67,7 @@ class AutoImportPostsHelper
     {
         return sprintf(
             'External resource API "%s" returned an invalid articles shape. Response: %s',
-            AutoImportPostsHelper::API_URL,
+            AutoImportBlogPostsHelper::API_URL,
             json_encode($response)
         );
     }
