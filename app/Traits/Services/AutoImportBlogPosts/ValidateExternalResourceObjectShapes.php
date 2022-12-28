@@ -7,9 +7,8 @@ use Illuminate\Support\Facades\Validator;
 
 trait ValidateExternalResourceObjectShapes
 {
-
     /**
-     * Check if the response is valid.
+     * Validate the response.
      *
      * @param object $response
      * @return boolean
@@ -23,7 +22,7 @@ trait ValidateExternalResourceObjectShapes
     }
 
     /**
-     * Check if the article is valid.
+     * Validate the article.
      *
      * @param object $article
      * @return boolean
@@ -41,14 +40,12 @@ trait ValidateExternalResourceObjectShapes
     /**
      * Validate the data.
      *
-     * @param [type] $data
-     * @param [type] $rules
+     * @param [object] $data
+     * @param [array] $rules
      * @return void
      */
-    private function validate(string $api_url, $data, $rules)
+    private function validate(string $api_url, object $data, array $rules)
     {
-        if (!is_object($data)) return false;
-
         try {
             Validator::make((array)  $data, $rules)->validate();
 
