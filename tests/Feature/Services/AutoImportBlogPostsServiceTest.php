@@ -96,7 +96,7 @@ it('should import an article if it has a valid shape', function () use ($respons
     $this->assertEquals($post->title, 'a');
 });
 
-it('should not create an article if already exists', function () use ($response) {
+it('should not import an article if already exists', function () use ($response) {
     BlogPost::create([
         'title' => 'a',
         'description' => 'b',
