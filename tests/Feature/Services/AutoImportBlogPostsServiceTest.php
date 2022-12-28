@@ -88,4 +88,39 @@ foreach (['id', 'title', 'description', 'published at'] as $field) {
     });
 }
 
-// TODO: Tests Create or update posts....
+it('should import an article if it has a valid shape', function () use ($response) {
+    AutoImportBlogPostsHelper::importExternalResource();
+
+    $post = BlogPost::first();
+
+    $this->assertEquals($post->title, 'a');
+});
+
+it('should not create an article if already exists', function () use ($response) {
+    BlogPost::create([
+        'title' => 'a',
+        'description' => 'b',
+        'publishedAt' => '2021-01-01 00:00:00',
+        'user_id' => 1,
+    ]);
+
+    AutoImportBlogPostsHelper::importExternalResource();
+
+    $countPosts = BlogPost::count();
+
+    $this->assertEquals($countPosts, 1);
+});
+
+it('should update an article if the resource has change the title or the description', function () use ($response) {
+    AutoImportBlogPostsHelper::importExternalResource();
+
+    $response->articles[0]->title = 'c';
+    $response->articles[0]->description = 'd';
+
+    AutoImportBlogPostsHelper::importExternalResource();
+
+    $post = BlogPost::first();
+
+    $this->assertEquals($post->title, 'c');
+    $this->assertEquals($post->description, 'd');
+});

@@ -11,6 +11,11 @@ class AutoImportBlogPostsHelper
 {
     public const API_URL = 'https://test.com';
 
+    /**
+     * Factory a response object.
+     *
+     * @return stdClass
+     */
     public static final function factoryResponse(): stdClass
     {
         $response = new stdClass();
@@ -21,10 +26,15 @@ class AutoImportBlogPostsHelper
         return $response;
     }
 
+    /**
+     * Factory an article object.
+     *
+     * @return stdClass
+     */
     public static final function factoryArticle(): stdClass
     {
         $article = new stdClass();
-        $article->id = rand(1, 1000);
+        $article->id = 1;
         $article->title = 'a';
         $article->description = 'b';
         $article->publishedAt = '2021-01-01 00:00:00';
@@ -32,11 +42,22 @@ class AutoImportBlogPostsHelper
         return $article;
     }
 
+    /**
+     * Run the import external resource.
+     *
+     * @return void
+     */
     public static final function importExternalResource(): void
     {
         app(AutoImportBlogPostsService::class)->import();
     }
 
+    /**
+     * Log error have been called once with message.
+     *
+     * @param string $message
+     * @return void
+     */
     public static final function logErrorHaveBeenCalledOnceWithMessage(string $message): void
     {
         Log::shouldHaveReceived('error')->once()->with(sprintf('Invalid API "%s" Response', self::API_URL), [
@@ -44,6 +65,12 @@ class AutoImportBlogPostsHelper
         ]);
     }
 
+    /**
+     * Normalize property name.
+     *
+     * @param string $field
+     * @return string
+     */
     public static final function normalizePropertyName(string $field): string
     {
         $property = $field;
