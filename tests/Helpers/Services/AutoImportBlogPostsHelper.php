@@ -24,6 +24,7 @@ class AutoImportBlogPostsHelper
     public static final function factoryArticle(): stdClass
     {
         $article = new stdClass();
+        $article->id = rand(1, 1000);
         $article->title = 'a';
         $article->description = 'b';
         $article->publishedAt = '2021-01-01 00:00:00';
@@ -31,49 +32,27 @@ class AutoImportBlogPostsHelper
         return $article;
     }
 
-    public static final  function importExternalResource(): void
+    public static final function importExternalResource(): void
     {
         app(AutoImportBlogPostsService::class)->import();
     }
 
-    public static final  function errorMessageInvalidResponseShape(object $response): string
+    public static final function logErrorHaveBeenCalledOnceWithMessage(string $message): void
     {
-        return sprintf(
-            'External resource API "%s" returned an invalid shape. Response: %s',
-            AutoImportBlogPostsHelper::API_URL,
-            json_encode($response)
-        );
+        Log::shouldHaveReceived('error')->once()->with(sprintf('Invalid API "%s" Response', self::API_URL), [
+            'error' => $message
+        ]);
     }
 
-    public static final  function errorMessageInvalidResponseStatus(object $response): string
+    public static final function normalizePropertyName(string $field): string
     {
-        return sprintf(
-            'External resource API "%s" returned an invalid status. Response: %s',
-            AutoImportBlogPostsHelper::API_URL,
-            json_encode($response)
-        );
-    }
+        $property = $field;
 
-    public static final function errorMessageInvalidArticleShape(object $response): string
-    {
-        return sprintf(
-            'External resource API "%s" returned an invalid article shape. Response: %s',
-            AutoImportBlogPostsHelper::API_URL,
-            json_encode($response)
-        );
-    }
+        $chunks = explode(' ', $field);
+        if (isset($chunks[1])) {
+            $property = $chunks[0] . ucfirst($chunks[1]);
+        }
 
-    public static final function errorMessageInvalidArticlesShape(object $response): string
-    {
-        return sprintf(
-            'External resource API "%s" returned an invalid articles shape. Response: %s',
-            AutoImportBlogPostsHelper::API_URL,
-            json_encode($response)
-        );
-    }
-
-    public static final function logErrorHaveBeenCalledWith(string $message): void
-    {
-        Log::shouldHaveReceived('error')->once()->with($message);
+        return $property;
     }
 }

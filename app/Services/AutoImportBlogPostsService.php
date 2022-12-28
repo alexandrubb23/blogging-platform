@@ -8,7 +8,6 @@ use App\Interfaces\Repositories\BlogPostRepositoryInterface;
 use App\Interfaces\Repositories\ExternalResourcesRepositoryInterface;
 use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
 use App\Models\ExternalResourcesApi;
-use App\Traits\Services\AutoImportBlogPosts\LogExternalResourceError;
 use App\Traits\Services\AutoImportBlogPosts\ValidateExternalResourceObjectShapes;
 
 class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
@@ -16,7 +15,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     /**
      * Use utils traits.
      */
-    use ValidateExternalResourceObjectShapes, LogExternalResourceError;
+    use ValidateExternalResourceObjectShapes;
 
     /**
      * @var App\Interfaces\Repositories\BlogPostRepositoryInterface
@@ -78,20 +77,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
         $api_url = $this->externalResource->api_url;
         $externalApiResult = $this->httpService->getAsObject($api_url);
 
-        if (!$this->hasValidShape($externalApiResult)) {
-            $this->logInvalidShapeError($api_url, $externalApiResult);
-            return;
-        }
-
-        if ($externalApiResult->status !== 'ok') {
-            $this->logInvalidStatusError($api_url, $externalApiResult);
-            return;
-        }
-
-        if (!is_array($externalApiResult->articles)) {
-            $this->logInvalidArticlesError($api_url, $externalApiResult);
-            return;
-        }
+        if (!$this->isValidResponse($api_url, $externalApiResult)) return;
 
         foreach ($externalApiResult->articles as $article)
             $this->importExternalPost($article);
@@ -105,10 +91,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     private function importExternalPost(object $article): void
     {
-        if (!$this->hasValidArticleShape($article)) {
-            $this->logInvalidArticleShapeError($this->externalResource->api_url, $article);
-            return;
-        }
+        if (!$this->isValidArticle($this->externalResource->api_url, $article)) return;
 
         $this->updateOrCreatePost($article);
     }

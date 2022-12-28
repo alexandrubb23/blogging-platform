@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\BlogPost;
 use Illuminate\Support\Facades\Log;
 
 use App\Services\HttpService;
@@ -18,6 +19,7 @@ beforeEach(function () use ($response) {
     });
 
     ExternalResourcesApi::factory()->create([
+        'user_id' => 1,
         'api_url' => AutoImportBlogPostsHelper::API_URL
     ]);
 });
@@ -27,95 +29,63 @@ afterEach(function () use ($response) {
     $response->count = 1;
     $response->articles = [AutoImportBlogPostsHelper::factoryArticle()];
 
+    BlogPost::truncate();
     ExternalResourcesApi::truncate();
 });
 
-it('should call logInvalidShapeError and log the error if the status is missing from the response', function () use ($response) {
+it('should log a validation error if the status is missign from the response', function () use ($response) {
     unset($response->status);
 
     AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportBlogPostsHelper::errorMessageInvalidResponseShape($response);
-    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledOnceWithMessage('The status field is required.');
 });
 
-it('should call logInvalidStatusError and log the error if the status is not equal with ok', function () use ($response) {
-    $response->status = 'fail';
+it('should log a validation error if the status is not equal with ok', function () use ($response) {
+    $response->status = 'no';
 
     AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportBlogPostsHelper::errorMessageInvalidResponseStatus($response);
-    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledOnceWithMessage('The selected status is invalid.');
 });
 
-it('should call logInvalidShapeError and log the error if the articles is missing from the response', function () use ($response) {
+it('should log a validation error if the articles is missign from the response', function () use ($response) {
     unset($response->articles);
 
     AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportBlogPostsHelper::errorMessageInvalidResponseShape($response);
-    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledOnceWithMessage('The articles field is required.');
 });
 
-it('should call logInvalidArticlesError and log the error if the articles is not an array', function () use ($response) {
-    $response->articles = '#';
+it('should log a validation error if the articles it is in the response but has an invalid structure', function () use ($response) {
+    $response->articles  = '+';
 
     AutoImportBlogPostsHelper::importExternalResource();
 
     $this->assertTrue(true);
 
-    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticlesShape($response);
-    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
+    AutoImportBlogPostsHelper::logErrorHaveBeenCalledOnceWithMessage('The articles must be an array.');
 });
 
-it('should call logInvalidArticleShapeError and log the error if the article is missing the id', function () use ($response) {
-    unset($response->articles[0]->id);
 
-    AutoImportBlogPostsHelper::importExternalResource();
+foreach (['id', 'title', 'description', 'published at'] as $field) {
+    it(sprintf('should log a validation error if the %s is missing from an article', $field), function () use ($response, $field) {
+        $property = AutoImportBlogPostsHelper::normalizePropertyName($field);
 
-    $this->assertTrue(true);
+        unset($response->articles[0]->$property);
 
-    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
-    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
-});
+        AutoImportBlogPostsHelper::importExternalResource();
 
-it('should call logInvalidArticleShapeError and log the error if the article is missing the title', function () use ($response) {
-    unset($response->articles[0]->title);
+        $this->assertTrue(true);
 
-    AutoImportBlogPostsHelper::importExternalResource();
-
-    $this->assertTrue(true);
-
-    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
-    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
-});
-
-it('should call logInvalidArticleShapeError and log the error if the article is missing the description', function () use ($response) {
-    unset($response->articles[0]->description);
-
-    AutoImportBlogPostsHelper::importExternalResource();
-
-    $this->assertTrue(true);
-
-    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
-    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
-});
-
-it('should call logInvalidArticleShapeError and log the error if the article is missing the publishedAt', function () use ($response) {
-    unset($response->articles[0]->publishedAt);
-
-    AutoImportBlogPostsHelper::importExternalResource();
-
-    $this->assertTrue(true);
-
-    $message = AutoImportBlogPostsHelper::errorMessageInvalidArticleShape($response->articles[0]);
-    AutoImportBlogPostsHelper::logErrorHaveBeenCalledWith($message);
-});
+        AutoImportBlogPostsHelper::logErrorHaveBeenCalledOnceWithMessage(sprintf('The %s field is required.', $field));
+    });
+}
 
 // TODO: Tests Create or update posts....

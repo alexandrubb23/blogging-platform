@@ -2,63 +2,63 @@
 
 namespace App\Traits\Services\AutoImportBlogPosts;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+
 trait ValidateExternalResourceObjectShapes
 {
-    /**
-     * The expected shape of the external api result.
-     * 
-     * @var array
-     */
-    private $externalResourceShape = [
-        'status',
-        'articles'
-    ];
 
     /**
-     * The expected shape of the external api article.
-     * 
-     * @var array
+     * Check if the response is valid.
+     *
+     * @param object $response
+     * @return boolean
      */
-    private $articleShape = [
-        'id',
-        'title',
-        'description',
-        'publishedAt'
-    ];
-
-    /**
-     * Check if the external api result has the expected shape.
-     * 
-     * @param object $result
-     * @return bool
-     */
-    public final function hasValidShape($result): bool
+    public function isValidResponse(string $api_url, object $response)
     {
-        return $this->validateObjectShape($this->externalResourceShape, $result);
+        return $this->validate($api_url, $response, [
+            'status' => 'required|string|in:ok',
+            'articles' => 'required|array'
+        ]);
     }
 
     /**
-     * Check if the external api articles has the expected shape.
-     * 
-     * @param object $result
-     * @return bool
+     * Check if the article is valid.
+     *
+     * @param object $article
+     * @return boolean
      */
-    public final function hasValidArticleShape(object $article): bool
+    public function isValidArticle(string $api_url, object $article)
     {
-        return $this->validateObjectShape($this->articleShape, $article);
+        return $this->validate($api_url, $article, [
+            'id' => 'required|int',
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'publishedAt' => 'required|string'
+        ]);
     }
 
     /**
-     * Check if the external api result has the expected shape.
-     * 
-     * @param object $result
-     * @return bool
+     * Validate the data.
+     *
+     * @param [type] $data
+     * @param [type] $rules
+     * @return void
      */
-    private function validateObjectShape(array $properties, object $result)
+    private function validate(string $api_url, $data, $rules)
     {
-        foreach ($properties as $property)
-            if (!property_exists($result, $property)) return false;
+        if (!is_object($data)) return false;
 
-        return true;
+        try {
+            Validator::make((array)  $data, $rules)->validate();
+
+            return true;
+        } catch (\Throwable $th) {
+            Log::error(sprintf('Invalid API "%s" Response', $api_url), [
+                'error' => $th->getMessage()
+            ]);
+        }
+
+        return false;
     }
 }
