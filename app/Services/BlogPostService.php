@@ -29,6 +29,7 @@ class BlogPostService
             default => 'desc',
         };
 
+        // TODO: Should we order by publishedAt or should we add a $column parameter to the method?
         return BlogPost::orderBy('id', $order);
     }
 
