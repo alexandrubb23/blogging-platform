@@ -1,9 +1,7 @@
 <?php
 
-$order = app()->runningInConsole() === false ? request()->get('order') : 'desc';
-
 return [
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Limit Posts Results
     |--------------------------------------------------------------------------
@@ -13,9 +11,9 @@ return [
     |
     */
 
-  'limit_results' => env('POSTS_PER_PAGE', 10),
+    'limit_results' => env('POSTS_PER_PAGE', 10),
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Limit User Posts Results
     |--------------------------------------------------------------------------
@@ -25,25 +23,9 @@ return [
     |
     */
 
-  'user_limit_results' => env('USER_POSTS_PER_PAGE', 10),
+    'user_limit_results' => env('USER_POSTS_PER_PAGE', 10),
 
-  /*
-    |--------------------------------------------------------------------------
-    | Posts Order Type
-    |--------------------------------------------------------------------------
-    |
-    | This value is the order type. This value is used when the
-    | framework needs to list and order desc or asc our blog posts.
-    |
-    */
-
-  'order_type' =>  match ($order) {
-    'asc' => 'asc',
-    'desc' => 'desc',
-    default => 'desc',
-  },
-
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Posts Limit Description
     |--------------------------------------------------------------------------
@@ -53,9 +35,9 @@ return [
     |
     */
 
-  'limit_description' => 20,
+    'limit_description' => 20,
 
-  /*
+    /*
     |--------------------------------------------------------------------------
     | Posts Date Format
     |--------------------------------------------------------------------------
@@ -64,5 +46,5 @@ return [
     | post shows the date when the post was crated.
     |
     */
-  'date_format' => 'F jS, Y'
+    'date_format' => 'F jS, Y'
 ];

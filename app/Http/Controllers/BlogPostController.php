@@ -35,7 +35,7 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        $order = config('posts.order_type');
+        $order = request()->get('order');
         $posts_limit = config('posts.limit_results');
 
         $posts = $this->blogPostRepository

@@ -14,7 +14,7 @@ interface BlogPostRepositoryInterface
    * 
    * @return \Illuminate\Contracts\Database\Eloquent\Builder
    */
-  public function getAll(string $order): Builder;
+  public function getAll(string|null $order): ?Builder;
 
   /**
    * Get blog post by external post id.
