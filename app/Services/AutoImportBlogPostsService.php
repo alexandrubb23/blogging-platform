@@ -189,6 +189,9 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     private function getExternalPostId(int $externalPostId): int
     {
-        return $this->externalResource->user_id . $this->externalResource->id . $externalPostId;
+        $userId = $this->externalResource->user_id;
+        $resourceId = $this->externalResource->id;
+
+        return $userId . $resourceId . $externalPostId;
     }
 }
