@@ -79,6 +79,18 @@ Once the shell alias has been configured, you may execute Sail commands by simpl
 sail up
 ```
 
+### Running Vite
+
+This small app is using [Breeze](https://github.com/laravel/breeze) for authentication features, including login, registration, password reset, email verification, and password confirmation. In addition, Breeze includes a simple "profile" page where the user may update their name, email address, and password. Also, users can create new posts.
+
+```bash
+npm i
+npm run dev
+```
+
+_Note: Please make sure you have npm installed._
+_P.S A small Docker container could be created in order to automate this._
+
 ### Database migrations
 
 Migrations are like version control for our database, allowing our team to define and share the application's database schema definition
