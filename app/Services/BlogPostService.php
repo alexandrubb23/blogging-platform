@@ -36,7 +36,7 @@ class BlogPostService
     /** 
      * @inheritdoc
      */
-    public function getByExternalPostId(int $externalPostId): ?BlogPost
+    public function findByExternalPostId(int $externalPostId): ?BlogPost
     {
         // TODO: We can throw an ModelNotFoundException (BlogPostNotFoundException) here if the post can not be found by external post id.
         return BlogPost::where('external_post_id', $externalPostId)->first();
@@ -45,7 +45,7 @@ class BlogPostService
     /**
      * @inheritdoc
      */
-    public function getByTitle(string $title): ?BlogPost
+    public function findByTitle(string $title): ?BlogPost
     {
         // TODO: We can throw an ModelNotFoundException (BlogPostNotFoundException) here if the post can not be found by title.
         return BlogPost::where('title', $title)->first();
@@ -54,7 +54,7 @@ class BlogPostService
     /**
      * @inheritdoc
      */
-    public function create(array $post): BlogPost|false
+    public function createPost(array $post): BlogPost|false
     {
         try {
             return BlogPost::create($post);
@@ -68,7 +68,7 @@ class BlogPostService
     /**
      * @inheritdoc
      */
-    public function update(array $post): BlogPost|false
+    public function updatePost(array $post): BlogPost|false
     {
         try {
             $blogPost = BlogPost::find($post['id']);

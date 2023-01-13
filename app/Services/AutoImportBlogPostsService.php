@@ -61,7 +61,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     {
         $externalResources = $this->externalResourcesRepository->getAll();
         foreach ($externalResources as $externalResource)
-            $this->importPostsFrom($externalResource);
+            $this->savePostFrom($externalResource);
     }
 
     /**
@@ -70,30 +70,30 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param App\Models\ExternalResourcesApi $externalResource
      * @return void
      */
-    private function importPostsFrom(ExternalResourcesApi $externalResource): void
+    private function savePostFrom(ExternalResourcesApi $externalResource): void
     {
         $this->externalResource = $externalResource;
 
         $api_url = $this->externalResource->api_url;
         $externalApiResult = $this->httpService->getAsObject($api_url);
 
-        if (!$this->isValidResponse($api_url, $externalApiResult)) return;
+        if (!$this->isValidApiResponse($api_url, $externalApiResult)) return;
 
-        foreach ($externalApiResult->articles as $article)
-            $this->importExternalPost($article);
+        foreach ($externalApiResult->articles as $post)
+            $this->savePost($post);
     }
 
     /**
-     * Import a single article.
+     * Import a single post.
      * 
-     * @param object $article
+     * @param object $post
      * @return void
      */
-    private function importExternalPost(object $article): void
+    private function savePost(object $post): void
     {
-        if (!$this->isValidArticle($this->externalResource->api_url, $article)) return;
+        if (!$this->isValidApiArticle($this->externalResource->api_url, $post)) return;
 
-        $this->updateOrCreatePost($article);
+        $this->createOrUpdatePost($post);
     }
 
     /**
@@ -102,36 +102,51 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param \App\Models\BlogPost $post
      * @return void
      */
-    private function updateOrCreatePost(object $article)
+    private function createOrUpdatePost(object $post)
     {
-        $externalPostId = $this->externalPostId($article->id);
-        if ($existingPost = $this->getPostByExternalId($externalPostId)) {
-            $this->update($existingPost, $article);
-            return;
-        }
+        $updatePost = $this->updatePost($post);
+        if ($updatePost === false) $this->createPost($post);
+    }
 
-        $postAlreadyExist = $this->blogPostRepository->getByTitle($article->title);
-        if ($postAlreadyExist) return;
+    /**
+     * Create a blog post.
+     *
+     * @param object $post
+     * @return boolean|null
+     */
+    private function createPost(object $post)
+    {
+        $postAlreadyExist = $this->blogPostRepository->findByTitle($post->title);
+        if ($postAlreadyExist) return false;
 
-        $this->blogPostRepository->create([
-            'title' => $article->title,
+        $postData = [
+            'title' => $post->title,
             'user_id' => $this->externalResource->user_id,
-            'description' => $article->description,
-            'publishedAt' => parseISO8601ToDateAndTime($article->publishedAt),
-            'external_post_id' => $externalPostId,
-        ]);
+            'description' => $post->description,
+            'publishedAt' => parseISO8601ToDateAndTime($post->publishedAt),
+            'external_post_id' => $this->getExternalPostId($post->id),
+        ];
+
+        $this->blogPostRepository->createPost($postData);
     }
 
     /**
      * Update a blog post.
      * 
      * @param \App\Models\BlogPost $post
-     * @return void
+     * @return boolean|null
      */
-    private function update(BlogPost $existingPost, object $article): void
+    private function updatePost(object $post)
     {
-        if ($post = $this->postShouldBeUpdated($existingPost, $article))
-            $this->blogPostRepository->update($post);
+        $externalPostId = $this->getExternalPostId($post->id);
+
+        $existingPost = $this->findPostByExternalId($externalPostId);
+        if (!$existingPost) return false;
+
+        $postData = $this->shouldUpdateBlogPost($existingPost, $post);
+        if ($postData === false) return;
+
+        $this->blogPostRepository->updatePost($postData);
     }
 
     /**
@@ -140,18 +155,19 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param \App\Models\BlogPost $post
      * @return array|bool
      */
-    private function postShouldBeUpdated(BlogPost $existingPost, object $article): array|bool
+    private function shouldUpdateBlogPost(BlogPost $existingPost, object $post): ?array
     {
-        $post = ['id' => $existingPost->id];
+        $postData = ['id' => $existingPost->id];
 
-        if ($existingPost->title !== $article->title)
-            $post['title'] = $article->title;
+        if ($existingPost->title !== $post->title)
+            $postData['title'] = $post->title;
 
-        if (strip_tags($existingPost->description) !== strip_tags($article->description))
-            $post['description'] = $article->description;
+        if (strip_tags($existingPost->description) !== strip_tags($post->description))
+            $postData['description'] = $post->description;
 
-        return count($post) > 1 ? $post : false;
+        return count($postData) > 1 ?  $postData : false;
     }
+
 
     /**
      * Post already exists.
@@ -159,9 +175,9 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param string $title
      * @return \App\Models\BlogPost|null
      */
-    private function getPostByExternalId(int $externalPostId): ?BlogPost
+    private function findPostByExternalId(int $externalPostId): ?BlogPost
     {
-        return $this->blogPostRepository->getByExternalPostId($externalPostId);
+        return $this->blogPostRepository->findByExternalPostId($externalPostId);
     }
 
     /**
@@ -171,7 +187,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param string $title
      * @return string
      */
-    private function externalPostId(int $externalPostId): int
+    private function getExternalPostId(int $externalPostId): int
     {
         return $this->externalResource->user_id . $this->externalResource->id . $externalPostId;
     }

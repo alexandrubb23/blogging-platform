@@ -39,32 +39,32 @@ class BlogPostRepository implements BlogPostRepositoryInterface
     /** 
      * @inheritdoc
      */
-    public function getByExternalPostId(int $externalPostId): ?BlogPost
+    public function findByExternalPostId(int $externalPostId): ?BlogPost
     {
-        return $this->blogPostService->getByExternalPostId($externalPostId);
+        return $this->blogPostService->findByExternalPostId($externalPostId);
     }
 
     /**
      * @inheritdoc
      */
-    public function getByTitle(string $title): ?BlogPost
+    public function findByTitle(string $title): ?BlogPost
     {
-        return $this->blogPostService->getByTitle($title);
+        return $this->blogPostService->findByTitle($title);
     }
 
     /**
      * @inheritdoc
      */
-    public function create(array $post): BlogPost|false
+    public function createPost(array $post): BlogPost|false
     {
-        return $this->blogPostService->create($post);
+        return $this->blogPostService->createPost($post);
     }
 
     /**
      * @inheritdoc
      */
-    public function update(array $post): BlogPost|false
+    public function updatePost(array $post): BlogPost|false
     {
-        return $this->blogPostService->update($post);
+        return $this->blogPostService->updatePost($post);
     }
 }

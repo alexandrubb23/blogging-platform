@@ -13,7 +13,7 @@ trait ValidateExternalResourceObjectShapes
      * @param object $response
      * @return boolean
      */
-    public function isValidResponse(string $api_url, object $response)
+    public function isValidApiResponse(string $api_url, object $response)
     {
         return $this->validate($api_url, $response, [
             'status' => 'required|string|in:ok',
@@ -27,7 +27,7 @@ trait ValidateExternalResourceObjectShapes
      * @param object $article
      * @return boolean
      */
-    public function isValidArticle(string $api_url, object $article)
+    public function isValidApiArticle(string $api_url, object $article)
     {
         return $this->validate($api_url, $article, [
             'id' => 'required|int',

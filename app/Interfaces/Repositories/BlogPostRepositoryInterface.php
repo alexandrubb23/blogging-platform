@@ -17,22 +17,22 @@ interface BlogPostRepositoryInterface
   public function getAll(string|null $order): ?Builder;
 
   /**
-   * Get blog post by external post id.
+   * Find blog post by external post id.
    *
    * @param int $externalPostId
    * 
    * @return App\Models\BlogPost
    */
-  public function getByExternalPostId(int $externalPostId): ?BlogPost;
+  public function findByExternalPostId(int $externalPostId): ?BlogPost;
 
   /**
-   * Get blog post by title.
+   * Find blog post by title.
    *
    * @param string $title
    * 
    * @return App\Models\BlogPost
    */
-  public function getByTitle(string $title): ?BlogPost;
+  public function findByTitle(string $title): ?BlogPost;
 
   /**
    * Create a new blog post.
@@ -41,7 +41,7 @@ interface BlogPostRepositoryInterface
    * 
    * @return App\Models\BlogPost|bool
    */
-  public function create(array $post): BlogPost|bool;
+  public function createPost(array $post): BlogPost|bool;
 
   /**
    * Update a blog post.
@@ -50,5 +50,5 @@ interface BlogPostRepositoryInterface
    * 
    * @return App\Models\BlogPost|bool
    */
-  public function update(array $post): BlogPost|bool;
+  public function updatePost(array $post): BlogPost|bool;
 }
