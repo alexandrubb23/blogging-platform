@@ -11,14 +11,6 @@ use App\Models\BlogPost;
 class BlogPostService
 {
     /**
-     * Error messages.
-     */
-    const ACTION_ERRORS = [
-        'create' => 'Blog post can not be created.',
-        'update' => 'Blog post can not be updated.',
-    ];
-
-    /**
      * Get all published blog posts.
      * 
      * @return \Illuminate\Contracts\Database\Eloquent\Builder
@@ -89,8 +81,7 @@ class BlogPostService
      */
     private function logError(string $action, Exception $ex): void
     {
-        Log::error(self::ACTION_ERRORS[$action], [
-            'error' => $ex->getMessage(),
-        ]);
+        $errorMessage = sprintf("%s: %s", $action, $ex->getMessage());
+        Log::error($errorMessage);
     }
 }
