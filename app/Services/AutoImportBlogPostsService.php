@@ -155,7 +155,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param \App\Models\BlogPost $post
      * @return array|bool
      */
-    private function shouldUpdateBlogPost(BlogPost $existingPost, object $post): ?array
+    private function shouldUpdateBlogPost(BlogPost $existingPost, object $post): array|bool
     {
         $postData = ['id' => $existingPost->id];
 
@@ -165,7 +165,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
         if (strip_tags($existingPost->description) !== strip_tags($post->description))
             $postData['description'] = $post->description;
 
-        return count($postData) > 1 ?  $postData : false;
+        return count($postData) > 1 ? $postData : false;
     }
 
 
