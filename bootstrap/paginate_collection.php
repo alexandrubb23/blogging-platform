@@ -2,19 +2,23 @@
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
-function paginate_collection($collection, $perPage = 10, $options = [])
+function paginate_collection($collection, int $perPage = 10, array $options = [])
 {
-  $page = request('page') ?: (Paginator::resolveCurrentPage() ?: 1);
+  $page = request()->input('page', 1);
 
   $collection = $collection instanceof Collection ? $collection : Collection::make($collection);
+
+  $options = array_merge($options, [
+    'path' => request()->url(),
+    'query' => request()->query(),
+  ]);
 
   return new LengthAwarePaginator(
     $collection->forPage($page, $perPage)->values(),
     $collection->count(),
     $perPage,
     $page,
-    array_merge($options, ['path' => request()->url()])
+    $options
   );
 }

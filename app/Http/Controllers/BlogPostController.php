@@ -70,7 +70,7 @@ class BlogPostController extends Controller
             'user_id' => auth()->user()->id,
         ];
 
-        $newPost = $this->blogPostRepository->create($post);
+        $newPost = $this->blogPostRepository->createPost($post);
 
         return Redirect::route('posts.create')->with('post', $newPost);
     }
