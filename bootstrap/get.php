@@ -7,13 +7,7 @@
  */
 function orderDirection(): string
 {
-    $order = request()->get('order');
+    $order = request()->query('order', 'desc');
 
-    $orderDirection = match ($order) {
-        'asc' => 'asc',
-        'desc' => 'desc',
-        default => 'desc',
-    };
-
-    return $orderDirection;
+    return in_array($order, ['asc', 'desc']) ? $order : 'desc';
 }
