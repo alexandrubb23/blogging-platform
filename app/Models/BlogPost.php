@@ -34,9 +34,11 @@ class BlogPost extends Model
      * 
      * @return string
      */
-    public function getShortDescriptionAttribute()
+    public function getShortDescriptionAttribute(): string
     {
-        return Str::words(strip_tags($this->description), config('posts.limit_description'));
+        $description = strip_tags($this->description);
+        $limit = config('posts.limit_description', 20);
+        return Str::limit($description, $limit, '...');
     }
 
     /**
@@ -54,10 +56,19 @@ class BlogPost extends Model
      * 
      * @return string
      */
-    public function getFormattedDateAttribute()
+    public function getFormattedDateAttribute2()
     {
         return Carbon::parse($this->publishedAt)->format(config('posts.date_format'));
     }
+
+    public function getFormattedDateAttribute(): string
+    {
+        $format = config('posts.date_format', 'Y-m-d');
+        $carbon = Carbon::parse($this->publishedAt);
+
+        return $carbon->format($format);
+    }
+
 
     /**
      * Check if the post is published.
