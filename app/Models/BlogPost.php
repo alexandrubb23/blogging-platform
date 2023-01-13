@@ -75,8 +75,8 @@ class BlogPost extends Model
      * 
      * @return bool
      */
-    public function getIsPublishedAttribute()
+    public function getIsPublishedAttribute(): bool
     {
-        return $this->publishedAt !== null;
+        return (bool) $this->publishedAt;
     }
 }
