@@ -8,13 +8,11 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 interface BlogPostRepositoryInterface
 {
   /**
-   * Get all blog posts.
-   *
-   * @param string $order
+   * Get all published blog posts.
    * 
    * @return \Illuminate\Contracts\Database\Eloquent\Builder
    */
-  public function getAll(string|null $order): ?Builder;
+  public function getAllPublished(): ?Builder;
 
   /**
    * Find blog post by external post id.

@@ -31,9 +31,9 @@ class BlogPostRepository implements BlogPostRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function getAll(string|null $order = 'desc'): ?Builder
+    public function getAllPublished(): ?Builder
     {
-        return $this->blogPostService->getAll($order);
+        return $this->blogPostService->getAllPublished();
     }
 
     /** 

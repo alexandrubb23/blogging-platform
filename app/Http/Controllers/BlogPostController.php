@@ -35,14 +35,15 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        $order = request()->get('order');
-        $posts_limit = config('posts.limit_results');
+        $orderBy = 'id'; // TODO: request()->get('order_by', 'created_at')?
+        $orderDirection = orderDirection();
+        $postsLimit = config('posts.limit_results');
 
-        $posts = $this->blogPostRepository
-            ->getAll($order)->whereNotNull('publishedAt')
-            ->paginate($posts_limit);
+        $posts = $this->blogPostRepository->getAllPublished()
+            ->orderBy($orderBy, $orderDirection)
+            ->paginate($postsLimit);
 
-        return view('posts.list', ['posts' =>  $posts]);
+        return view('posts.list', ['posts' => $posts]);
     }
 
     /**

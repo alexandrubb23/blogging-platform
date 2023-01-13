@@ -19,18 +19,13 @@ class BlogPostService
     ];
 
     /**
-     * @inheritdoc
+     * Get all published blog posts.
+     * 
+     * @return \Illuminate\Contracts\Database\Eloquent\Builder
      */
-    public function getAll(string|null $order = 'desc'): ?Builder
+    public function getAllPublished(): ?Builder
     {
-        $order = match ($order) {
-            'asc' => 'asc',
-            'desc' => 'desc',
-            default => 'desc',
-        };
-
-        // TODO: Should we order by publishedAt or should we add a $column parameter to the method?
-        return BlogPost::orderBy('id', $order);
+        return BlogPost::whereNotNull('publishedAt');
     }
 
     /** 
