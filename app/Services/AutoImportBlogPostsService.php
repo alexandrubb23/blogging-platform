@@ -97,7 +97,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     }
 
     /**
-     * Create a new blog post.
+     * Create or update a blog post.
      * 
      * @param \App\Models\BlogPost $post
      * @return void
@@ -184,8 +184,8 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * Compose a unique external post id based on 
      * user_id, api_id and external article id.
      * 
-     * @param string $title
-     * @return string
+     * @param int $externalPostId
+     * @return int
      */
     private function getExternalPostId(int $externalPostId): int
     {
