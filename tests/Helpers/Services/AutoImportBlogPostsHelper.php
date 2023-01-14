@@ -60,7 +60,8 @@ class AutoImportBlogPostsHelper
      */
     public static final function logErrorHaveBeenCalledOnceWithMessage(string $message): void
     {
-        Log::shouldHaveReceived('error')->once()->with(sprintf('Invalid API "%s" Response: %s', self::API_URL, $message));
+        $formattedMessage = sprintf('Invalid API "%s" Response: %s', self::API_URL, $message);
+        Log::shouldHaveReceived('error')->once()->with($formattedMessage);
     }
 
     /**
