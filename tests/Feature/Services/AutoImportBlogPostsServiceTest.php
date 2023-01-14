@@ -9,7 +9,8 @@ use App\Services\HttpService;
 use App\Models\ExternalResourcesApi;
 use Tests\Helpers\Services\AutoImportBlogPostsHelper;
 
-$response = AutoImportBlogPostsHelper::factoryResponse();
+$article = AutoImportBlogPostsHelper::factoryArticle(1, "a", "b", "2021-01-01 00:00:00");
+$response = AutoImportBlogPostsHelper::factoryResponse("ok", 1, [$article]);
 
 beforeEach(function () use ($response) {
     Log::spy();
@@ -27,7 +28,7 @@ beforeEach(function () use ($response) {
 afterEach(function () use ($response) {
     $response->status = 'ok';
     $response->count = 1;
-    $response->articles = [AutoImportBlogPostsHelper::factoryArticle()];
+    $response->articles = [AutoImportBlogPostsHelper::factoryArticle(1, "a", "b", "2021-01-01 00:00:00")];
 
     BlogPost::truncate();
     ExternalResourcesApi::truncate();

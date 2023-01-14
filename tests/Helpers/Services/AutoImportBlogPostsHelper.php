@@ -7,6 +7,21 @@ use Illuminate\Support\Facades\Log;
 
 use App\Services\AutoImportBlogPostsService;
 
+class Article
+{
+    public int $id;
+    public string $title;
+    public string $description;
+    public string $publishedAt;
+}
+
+class Response
+{
+    public string $status;
+    public int $count;
+    public string|array $articles;
+}
+
 class AutoImportBlogPostsHelper
 {
     public const API_URL = 'https://test.com';
@@ -14,14 +29,15 @@ class AutoImportBlogPostsHelper
     /**
      * Factory a response object.
      *
-     * @return stdClass
+     * @return Response
      */
-    public static final function factoryResponse(): stdClass
+    public static final function factoryResponse(string $status, int $count, string|array $articles): Response
     {
-        $response = new stdClass();
-        $response->status = 'ok';
-        $response->count = 1;
-        $response->articles = [AutoImportBlogPostsHelper::factoryArticle()];
+        $response = new Response();
+
+        $response->status = $status;
+        $response->count = $count;
+        $response->articles = $articles;
 
         return $response;
     }
@@ -29,15 +45,16 @@ class AutoImportBlogPostsHelper
     /**
      * Factory an article object.
      *
-     * @return stdClass
+     * @return Article
      */
-    public static final function factoryArticle(): stdClass
+    public static final function factoryArticle(int $id, string $title, string $description, string $publishedAt): Article
     {
-        $article = new stdClass();
-        $article->id = 1;
-        $article->title = 'a';
-        $article->description = 'b';
-        $article->publishedAt = '2021-01-01 00:00:00';
+        $article = new Article();
+
+        $article->id = $id;
+        $article->title = $title;
+        $article->description = $description;
+        $article->publishedAt = $publishedAt;
 
         return $article;
     }
