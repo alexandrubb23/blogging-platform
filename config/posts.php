@@ -31,11 +31,11 @@ return [
     |--------------------------------------------------------------------------
     |
     |This value is used when the
-    | post should nit display the entiry description.
+    | post should not display the entiry description.
     |
     */
 
-    'limit_description' => 20,
+    'limit_description' => env('POSTS_LIMIT_DESCRIPTION', 20),
 
     /*
     |--------------------------------------------------------------------------
@@ -46,5 +46,5 @@ return [
     | post shows the date when the post was crated.
     |
     */
-    'date_format' => 'F jS, Y'
+    'date_format' => env('POST_DEFAULT_DATE_FORMAT', 'F jS, Y')
 ];

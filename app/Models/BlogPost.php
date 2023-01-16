@@ -11,6 +11,11 @@ class BlogPost extends Model
 {
     use HasFactory;
 
+    /**
+     * Fillable fields.
+     *
+     * @var array
+     */
     protected $fillable = [
         'title',
         'description',
@@ -36,8 +41,9 @@ class BlogPost extends Model
      */
     public function getShortDescriptionAttribute(): string
     {
+        $limit = config('posts.limit_description');
         $description = strip_tags($this->description);
-        $limit = config('posts.limit_description', 20);
+
         return Str::limit($description, $limit, '...');
     }
 
@@ -53,18 +59,13 @@ class BlogPost extends Model
 
     /**
      * Get the post's created_at date in a human readable format.
-     * 
+     *
      * @return string
      */
-    public function getFormattedDateAttribute2()
-    {
-        return Carbon::parse($this->publishedAt)->format(config('posts.date_format'));
-    }
-
     public function getFormattedDateAttribute(): string
     {
-        $format = config('posts.date_format', 'Y-m-d');
         $carbon = Carbon::parse($this->publishedAt);
+        $format = config('posts.date_format');
 
         return $carbon->format($format);
     }
