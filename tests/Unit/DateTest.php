@@ -15,7 +15,8 @@ it('should log the error and return the current date and time if parseISO8601ToD
 
     $this->assertMatchesRegularExpression('/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/', $date);
 
-    Log::shouldHaveReceived('error')->once()->with('parseISO8601ToDateAndTime: Could not parse \'+\': Failed to parse time string (+) at position 0 (+): Unexpected character');
+    $errorMessage = 'parseISO8601ToDateAndTime: Could not parse \'+\': Failed to parse time string (+) at position 0 (+): Unexpected character';
+    Log::shouldHaveReceived('error')->once()->with($errorMessage);
 });
 
 
