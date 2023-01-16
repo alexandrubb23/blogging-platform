@@ -17,7 +17,7 @@ class BlogPostService
      */
     public function getAllPublished(): ?Builder
     {
-        return BlogPost::whereNotNull('publishedAt');
+        return BlogPost::whereNotNull('published_at');
     }
 
     /** 

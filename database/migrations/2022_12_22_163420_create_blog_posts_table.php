@@ -19,7 +19,7 @@ return new class extends Migration
             $table->longText('description');
             $table->integer('user_id');
             $table->integer('external_post_id')->nullable();
-            $table->dateTimeTz('publishedAt')->nullable();
+            $table->dateTimeTz('published_at')->nullable();
             $table->timestamps();
 
             $table->index('user_id');

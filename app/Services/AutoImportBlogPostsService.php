@@ -124,7 +124,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
             'title' => $post->title,
             'user_id' => $this->externalResource->user_id,
             'description' => $post->description,
-            'publishedAt' => parseISO8601ToDateAndTime($post->publishedAt),
+            'published_at' => parseISO8601ToDateAndTime($post->publishedAt),
             'external_post_id' => $this->getExternalPostId($post->id),
         ];
 

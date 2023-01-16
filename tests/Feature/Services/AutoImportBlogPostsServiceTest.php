@@ -101,7 +101,7 @@ it('should not import an article if already exists', function () use ($response)
     BlogPost::create([
         'title' => 'a',
         'description' => 'b',
-        'publishedAt' => '2021-01-01 00:00:00',
+        'published_at' => '2021-01-01 00:00:00',
         'user_id' => 1,
     ]);
 

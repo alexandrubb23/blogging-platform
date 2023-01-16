@@ -20,7 +20,7 @@ class BlogPost extends Model
         'title',
         'description',
         'user_id',
-        'publishedAt',
+        'published_at',
         'external_post_id'
     ];
 
@@ -64,7 +64,7 @@ class BlogPost extends Model
      */
     public function getFormattedDateAttribute(): string
     {
-        $carbon = Carbon::parse($this->publishedAt);
+        $carbon = Carbon::parse($this->published_at);
         $format = config('posts.date_format');
 
         return $carbon->format($format);
@@ -78,6 +78,6 @@ class BlogPost extends Model
      */
     public function getIsPublishedAttribute(): bool
     {
-        return (bool) $this->publishedAt;
+        return (bool) $this->published_at;
     }
 }
