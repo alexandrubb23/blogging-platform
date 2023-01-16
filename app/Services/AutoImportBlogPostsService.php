@@ -104,8 +104,12 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     private function createOrUpdatePost(object $post)
     {
-        $updatePost = $this->updatePost($post);
-        if ($updatePost === false) $this->createPost($post);
+        $existingPost = $this->findPostByTitleOrByExternalId($post);
+        if (!$existingPost) {
+            $this->createPost($post);
+        } else {
+            $this->updatePost($existingPost, $post);
+        }
     }
 
     /**
@@ -116,9 +120,6 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     private function createPost(object $post)
     {
-        $postAlreadyExist = $this->blogPostRepository->findByTitle($post->title);
-        if ($postAlreadyExist) return false;
-
         $postData = [
             'title' => $post->title,
             'user_id' => $this->externalResource->user_id,
@@ -136,13 +137,8 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param \App\Models\BlogPost $post
      * @return boolean|null
      */
-    private function updatePost(object $post)
+    private function updatePost(object $existingPost, object $post)
     {
-        $externalPostId = $this->getExternalPostId($post->id);
-
-        $existingPost = $this->findPostByExternalId($externalPostId);
-        if (!$existingPost) return false;
-
         $postData = $this->shouldUpdateBlogPost($existingPost, $post);
         if ($postData === false) return;
 
@@ -178,6 +174,23 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     private function findPostByExternalId(int $externalPostId): ?BlogPost
     {
         return $this->blogPostRepository->findByExternalPostId($externalPostId);
+    }
+
+    /**
+     * Find a post by title or by external id.
+     *
+     * @param object $post
+     * @return BlogPost|null
+     */
+    private function findPostByTitleOrByExternalId(object $post): ?BlogPost
+    {
+        $existingPost = $this->blogPostRepository->findByTitle($post->title);
+        if (!$existingPost) {
+            $externalPostId = $this->getExternalPostId($post->id);
+            $existingPost = $this->findPostByExternalId($externalPostId);
+        }
+
+        return $existingPost;
     }
 
     /**
