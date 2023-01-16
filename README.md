@@ -137,6 +137,10 @@ Our APP is (or will) covered with tests. In order to run automated tests, please
 sail artisan test
 ```
 
+## Troubleshooting
+
+In case you encounter a `Connection refused` error from the app, first check the `.env` file to ensure that the `DB_PASSWORD` is set. If the password is set, the error may be caused by the `DB_HOST` not matching the IP exposed by the Docker container. To find the correct IP, run the command `docker network inspect bridge --format "{{(index .IPAM.Config 0).Gateway}}"` in the terminal, and update the `.env` file with the output IP as the `DB_HOST`.
+
 ## Wishes (real world)
 
 I wish I had more time in order to bring this APP to the next level. Please bear with me: it is just a dummy APP.
