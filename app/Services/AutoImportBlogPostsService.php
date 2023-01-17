@@ -3,20 +3,14 @@
 namespace App\Services;
 
 use App\Models\BlogPost;
+use App\Models\ExternalResourcesApi;
 use App\Interfaces\Services\HttpServiceInterface;
 use App\Interfaces\Repositories\BlogPostRepositoryInterface;
 use App\Interfaces\Repositories\ExternalResourcesRepositoryInterface;
 use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
-use App\Models\ExternalResourcesApi;
-use App\Traits\Services\AutoImportBlogPosts\ValidateExternalResourceObjectShapes;
 
 class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
 {
-    /**
-     * Use utils traits.
-     */
-    use ValidateExternalResourceObjectShapes;
-
     /**
      * @var App\Interfaces\Repositories\BlogPostRepositoryInterface
      */
@@ -77,7 +71,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
         $api_url = $this->externalResource->api_url;
         $externalApiResult = $this->httpService->getAsObject($api_url);
 
-        if (!$this->isValidApiResponse($api_url, $externalApiResult)) return;
+        if (!ValidateApiResponse::isValidApiResponse($api_url, $externalApiResult)) return;
 
         foreach ($externalApiResult->articles as $post)
             $this->savePost($post);
@@ -91,7 +85,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      */
     private function savePost(object $post): void
     {
-        if (!$this->isValidApiArticle($this->externalResource->api_url, $post)) return;
+        if (!ValidateApiResponse::isValidApiArticle($this->externalResource->api_url, $post)) return;
 
         $this->createOrUpdatePost($post);
     }
