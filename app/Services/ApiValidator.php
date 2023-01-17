@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class ValidatorApiResponse
+class ApiValidator
 {
     /**
      * Validate the data.
