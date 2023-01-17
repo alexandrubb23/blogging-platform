@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Services\ValidatorApiResponse;
-
 class ValidateApiResponse
 {
     /**
