@@ -13,9 +13,9 @@ class ValidatorApiResponse
      *
      * @param [object] $data
      * @param [array] $rules
-     * @return void
+     * @return boolean
      */
-    public static function validate(string $api_url, object $data, array $rules)
+    public static function validate(string $api_url, object $data, array $rules): bool
     {
         try {
             Validator::make((array)  $data, $rules)->validate();
