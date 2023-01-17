@@ -5,6 +5,8 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
+use App\Console\Commands\AutoImportBlogPostsCommand;
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -15,7 +17,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('posts:import')->hourly();
+        // We can create a service with a bunch of commands using the Polymorphism principle, for instance:
+        // $commands = CommandsSchedule::($schedule)->commands();
+        // foreach ($commands as $command) {
+        //     $command->execute();
+        // }
+        // And execute method will return a different interval type to execute the command.
+
+        $command = AutoImportBlogPostsCommand::IMPORT_POSTS_SIGNATURE;
+        $schedule->command($command)->hourly();
     }
 
     /**

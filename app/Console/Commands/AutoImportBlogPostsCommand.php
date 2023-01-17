@@ -8,14 +8,20 @@ use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
 use Illuminate\Console\Command;
 use App\Services\AutoImportBlogPostsService;
 
+
 class AutoImportBlogPostsCommand extends Command
 {
+    /**
+     * The signature of the console command.
+     */
+    public const IMPORT_POSTS_SIGNATURE = 'posts:import';
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'posts:import';
+    protected $signature = self::IMPORT_POSTS_SIGNATURE;
 
     /**
      * The console command description.
