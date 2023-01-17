@@ -201,6 +201,22 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Commands Service
+    |--------------------------------------------------------------------------
+    |
+    | The commands listed here will be automatically loaded on the request 
+    | to your application.
+    | Feel free to add your own commands to this array to grant expanded 
+    | functionality to your applications.
+    |
+    */
+
+    'schedule_commands' => [
+        App\Services\ScheduleCommands\Events\AutoImportBlogPostsCommandFrequency::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Class Aliases
     |--------------------------------------------------------------------------
     |
