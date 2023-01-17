@@ -14,14 +14,14 @@ class AutoImportBlogPostsCommand extends Command
     /**
      * The signature of the console command.
      */
-    public const IMPORT_POSTS_SIGNATURE = 'posts:import';
+    public const COMMAND_SIGNATURE = 'posts:import';
 
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = self::IMPORT_POSTS_SIGNATURE;
+    protected $signature = self::COMMAND_SIGNATURE;
 
     /**
      * The console command description.
