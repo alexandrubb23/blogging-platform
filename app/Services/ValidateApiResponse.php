@@ -10,9 +10,9 @@ class ValidateApiResponse
      * @param object $response
      * @return boolean
      */
-    public static function isValidApiResponse(string $api_url, object $response)
+    public static function isValidApiResponse(string $apiUrl, object $response)
     {
-        return ApiValidator::validate($api_url, $response, [
+        return ApiValidator::validate($apiUrl, $response, [
             'status' => 'required|string|in:ok',
             'articles' => 'required|array'
         ]);
@@ -24,9 +24,9 @@ class ValidateApiResponse
      * @param object $article
      * @return boolean
      */
-    public static function isValidApiArticle(string $api_url, object $article)
+    public static function isValidApiArticle(string $apiUrl, object $article)
     {
-        return ApiValidator::validate($api_url, $article, [
+        return ApiValidator::validate($apiUrl, $article, [
             'id' => 'required|int',
             'title' => 'required|string',
             'description' => 'required|string',
