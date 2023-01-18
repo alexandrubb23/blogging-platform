@@ -67,15 +67,16 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     {
         $this->externalResource = $externalResource;
 
-        $api_url = $this->externalResource->api_url;
-        $externalApiResult = $this->httpService->getAsObject($api_url);
+        $apiUrl = $this->externalResource->api_url;
+        $externalApiResult = $this->httpService->getAsObject($apiUrl);
 
-        if (!ValidateApiResponse::isValidApiResponse($api_url, $externalApiResult)) return;
+        if (!ValidateApiResponse::isValidApiResponse($apiUrl, $externalApiResult)) {
+            return;
+        }
 
-        // The classical foreach can be more faster here, but I prefer to use the Laravel Collection.
-        collect($externalApiResult->articles)
-            ->each(fn ($post) => $this->savePost($post));
+        collect($externalApiResult->articles)->each(fn ($post) => $this->importPost($post));
     }
+
 
     /**
      * Import a single post.
@@ -83,9 +84,11 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param object $post
      * @return void
      */
-    private function savePost(object $post): void
+    private function importPost(object $post): void
     {
-        if (!ValidateApiResponse::isValidApiArticle($this->externalResource->api_url, $post)) return;
+        if (!ValidateApiResponse::isValidApiArticle($this->externalResource->api_url, $post)) {
+            return;
+        };
 
         $this->createOrUpdatePost($post);
     }
