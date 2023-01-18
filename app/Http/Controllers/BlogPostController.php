@@ -14,6 +14,11 @@ use App\Interfaces\Repositories\BlogPostRepositoryInterface;
 class BlogPostController extends Controller
 {
     /**
+     * @var string
+     */
+    const ORDER_BY = 'published_at';
+
+    /**
      * @var BlogPostRepositoryInterface
      */
     private BlogPostRepositoryInterface $blogPostRepository;
@@ -35,12 +40,11 @@ class BlogPostController extends Controller
      */
     public function index()
     {
-        $orderBy = 'id'; // TODO: request()->get('order_by', 'created_at')?
         $orderDirection = orderDirection();
         $postsLimit = config('posts.limit_results');
 
         $posts = $this->blogPostRepository->getAllPublished()
-            ->orderBy($orderBy, $orderDirection)
+            ->orderBy(self::ORDER_BY, $orderDirection)
             ->paginate($postsLimit);
 
         return view('posts.list', ['posts' => $posts]);
