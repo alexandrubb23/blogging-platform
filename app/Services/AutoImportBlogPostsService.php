@@ -74,7 +74,9 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
             return;
         }
 
-        collect($externalApiResult->articles)->each(fn ($post) => $this->importPost($post));
+        foreach ($externalApiResult->articles as $post) {
+            $this->importPost($post);
+        }
     }
 
 
@@ -134,7 +136,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param \App\Models\BlogPost $post
      * @return boolean|null
      */
-    private function updatePost(object $existingPost, object $post)
+    private function updatePost(BlogPost $existingPost, object $post)
     {
         $postData = $this->shouldUpdateBlogPost($existingPost, $post);
         if ($postData === false) return;
