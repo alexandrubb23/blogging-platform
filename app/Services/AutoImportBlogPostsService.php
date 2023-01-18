@@ -54,7 +54,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     public final function import(): void
     {
         $this->externalResourcesRepository->getAll()
-            ->each(fn ($externalResource) => $this->savePostFrom($externalResource));
+            ->each(fn ($externalResource) => $this->importPostsFrom($externalResource));
     }
 
     /**
@@ -63,7 +63,7 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * @param App\Models\ExternalResourcesApi $externalResource
      * @return void
      */
-    private function savePostFrom(ExternalResourcesApi $externalResource): void
+    private function importPostsFrom(ExternalResourcesApi $externalResource): void
     {
         $this->externalResource = $externalResource;
 
