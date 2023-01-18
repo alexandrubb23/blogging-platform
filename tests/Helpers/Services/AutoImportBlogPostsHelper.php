@@ -2,61 +2,41 @@
 
 namespace Tests\Helpers\Services;
 
-use stdClass;
 use Illuminate\Support\Facades\Log;
 
 use App\Services\AutoImportBlogPostsService;
 
-class Article
-{
-    public int $id;
-    public string $title;
-    public string $description;
-    public string $publishedAt;
-}
-
-class Response
-{
-    public string $status;
-    public int $count;
-    public string|array $articles;
-}
-
 class AutoImportBlogPostsHelper
 {
-    public const API_URL = 'https://test.com';
+    public const API_URL = 'https://api.square.com';
 
     /**
      * Factory a response object.
      *
-     * @return Response
+     * @return object
      */
-    public static final function factoryResponse(string $status, int $count, string|array $articles): Response
+    public static final function factoryResponse(string $status, int $count, string|array $articles): object
     {
-        $response = new Response();
-
-        $response->status = $status;
-        $response->count = $count;
-        $response->articles = $articles;
-
-        return $response;
+        return (object) [
+            'count' => $count,
+            'status' => $status,
+            'articles' => $articles,
+        ];
     }
 
     /**
      * Factory an article object.
      *
-     * @return Article
+     * @return object
      */
-    public static final function factoryArticle(int $id, string $title, string $description, string $publishedAt): Article
+    public static final function factoryArticle(int $id, string $title, string $description, string $publishedAt): object
     {
-        $article = new Article();
-
-        $article->id = $id;
-        $article->title = $title;
-        $article->description = $description;
-        $article->publishedAt = $publishedAt;
-
-        return $article;
+        return (object) [
+            'id' => $id,
+            'title' => $title,
+            'description' => $description,
+            'publishedAt' => $publishedAt,
+        ];
     }
 
     /**

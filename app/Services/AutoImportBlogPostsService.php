@@ -3,11 +3,13 @@
 namespace App\Services;
 
 use App\Models\BlogPost;
+use App\Factory\ExternalArticle;
+use App\Factory\ExternalResponse;
 use App\Models\ExternalResourcesApi;
 use App\Interfaces\Services\HttpServiceInterface;
 use App\Interfaces\Repositories\BlogPostRepositoryInterface;
-use App\Interfaces\Repositories\ExternalResourcesRepositoryInterface;
 use App\Interfaces\Services\AutoImportBlogPostsServiceInterface;
+use App\Interfaces\Repositories\ExternalResourcesRepositoryInterface;
 
 class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
 {
@@ -54,91 +56,96 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     public final function import(): void
     {
         $this->externalResourcesRepository->getAll()
-            ->each(fn ($externalResource) => $this->importPostsFromExternalResource($externalResource));
+            ->each(fn ($externalResource) => $this->importArticlesFromExternalResource($externalResource));
     }
 
     /**
-     * Import posts from external resource.
+     * Import articles from external resource.
      * 
      * @param App\Models\ExternalResourcesApi $externalResource
      * @return void
      */
-    private function importPostsFromExternalResource(ExternalResourcesApi $externalResource): void
+    private function importArticlesFromExternalResource(ExternalResourcesApi $externalResource): void
     {
         $this->externalResource = $externalResource;
 
         $apiUrl = $this->externalResource->api_url;
-        $externalApiResult = $this->httpService->getAsObject($apiUrl);
+        $result = $this->httpService->getAsObject($apiUrl);
+        $externalApiResult = ExternalResponse::factoryResponse($apiUrl, $result);
 
-        if (!ValidateApiResponse::isValidApiResponse($apiUrl, $externalApiResult)) {
+        if (!$externalApiResult) {
             return;
         }
 
-        foreach ($externalApiResult->articles as $post) {
-            $this->importPost($post);
+        foreach ($externalApiResult->articles as $externalArticle) {
+            $this->importExternalArticle($externalArticle);
         }
     }
 
 
     /**
-     * Import a single post.
+     * Import external article.
      * 
-     * @param object $post
+     * @param object $externalArticle
      * @return void
      */
-    private function importPost(object $post): void
+    private function importExternalArticle(object $externalArticle): void
     {
-        if (!ValidateApiResponse::isValidApiArticle($this->externalResource->api_url, $post)) {
-            return;
-        };
+        $externalArticle = ExternalArticle::factoryArticle(
+            $this->externalResource->api_url,
+            $externalArticle
+        );
 
-        $this->createOrUpdatePost($post);
+        if (!$externalArticle) return;
+
+        $this->createOrUpdatePostFromExternalArticle($externalArticle);
     }
 
     /**
-     * Create or update a blog post.
+     * Create or update a blog post based on external article.
      * 
-     * @param \App\Models\BlogPost $post
+     * @param \App\Factory\ExternalArticle $externalArticle
      * @return void
      */
-    private function createOrUpdatePost(object $post)
+    private function createOrUpdatePostFromExternalArticle(ExternalArticle $externalArticle)
     {
-        $existingPost = $this->findPostByTitleOrByExternalId($post);
-        if (!$existingPost) {
-            $this->createPost($post);
+        $post = $this->findPostByTitleOrByExternalId($externalArticle);
+        if (!$post) {
+            $this->createPostFromExternalArticle($externalArticle);
         } else {
-            $this->updatePost($existingPost, $post);
+            $this->updatePostFromExternalArticle($post, $externalArticle);
         }
     }
 
     /**
-     * Create a blog post.
+     * Create a blog post based on external article.
      *
-     * @param object $post
+     * @param \App\Factory\ExternalArticle $externalArticle
      * @return boolean|null
      */
-    private function createPost(object $post)
+    private function createPostFromExternalArticle(ExternalArticle $externalArticle)
     {
         $postData = [
-            'title' => $post->title,
+            'title' => $externalArticle->title,
             'user_id' => $this->externalResource->user_id,
-            'description' => $post->description,
-            'published_at' => parseISO8601ToDateAndTime($post->publishedAt),
-            'external_post_id' => $this->getExternalPostId($post->id),
+            'description' => $externalArticle->description,
+            'published_at' => parseISO8601ToDateAndTime($externalArticle->publishedAt),
+            'external_post_id' => $this->getExternalPostId($externalArticle->id),
         ];
 
         $this->blogPostRepository->createPost($postData);
     }
 
     /**
-     * Update a blog post.
+     * Update a blog post based on external article.
      * 
      * @param \App\Models\BlogPost $post
-     * @return boolean|null
+     * @param \App\Factory\ExternalArticle $externalArticle
+     * @return null
      */
-    private function updatePost(BlogPost $existingPost, object $post)
+    private function updatePostFromExternalArticle(BlogPost $post, ExternalArticle $externalArticle)
     {
-        $postData = $this->shouldUpdateBlogPost($existingPost, $post);
+        $postData = $this->shouldUpdateBlogPost($post, $externalArticle);
         if ($postData === false) return;
 
         $this->blogPostRepository->updatePost($postData);
@@ -148,26 +155,27 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
      * Check if post should be updated.
      * 
      * @param \App\Models\BlogPost $post
+     * @param \App\Factory\ExternalArticle $externalArticle
      * @return array|bool
      */
-    private function shouldUpdateBlogPost(BlogPost $existingPost, object $post): array|bool
+    private function shouldUpdateBlogPost(BlogPost $post, ExternalArticle $externalArticle): array|bool
     {
-        $postData = ['id' => $existingPost->id];
+        $postData = ['id' => $post->id];
 
-        if ($existingPost->title !== $post->title)
-            $postData['title'] = $post->title;
+        if ($post->title !== $externalArticle->title)
+            $postData['title'] = $externalArticle->title;
 
-        if (strip_tags($existingPost->description) !== strip_tags($post->description))
-            $postData['description'] = $post->description;
+        if (strip_tags($post->description) !== strip_tags($externalArticle->description))
+            $postData['description'] = $externalArticle->description;
 
         return count($postData) > 1 ? $postData : false;
     }
 
 
     /**
-     * Post already exists.
+     * Find a post by external id.
      * 
-     * @param string $title
+     * @param int $externalPostId
      * @return \App\Models\BlogPost|null
      */
     private function findPostByExternalId(int $externalPostId): ?BlogPost
@@ -178,14 +186,14 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
     /**
      * Find a post by title or by external id.
      *
-     * @param object $post
+     * @param \App\Factory\ExternalArticle $externalArticle
      * @return BlogPost|null
      */
-    private function findPostByTitleOrByExternalId(object $post): ?BlogPost
+    private function findPostByTitleOrByExternalId(ExternalArticle $externalArticle): ?BlogPost
     {
-        $existingPost = $this->blogPostRepository->findByTitle($post->title);
+        $existingPost = $this->blogPostRepository->findByTitle($externalArticle->title);
         if (!$existingPost) {
-            $externalPostId = $this->getExternalPostId($post->id);
+            $externalPostId = $this->getExternalPostId($externalArticle->id);
             $existingPost = $this->findPostByExternalId($externalPostId);
         }
 
