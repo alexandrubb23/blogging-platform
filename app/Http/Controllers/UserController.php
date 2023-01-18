@@ -2,10 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Repositories\UserPostsRepository;
+use App\Interfaces\Repositories\UserPostsRepositoryInterface;
 
 class UserController extends Controller
 {
+    /**
+     * @var App\Interfaces\Repositories\UserPostsRepositoryInterface
+     */
+    private UserPostsRepositoryInterface $userPostsRepository;
+
+    /**
+     * Class constructor.
+     *
+     * @param App\Interfaces\Repositories\UserPostsRepositoryInterface
+     */
+    public function __construct(UserPostsRepositoryInterface $userPostsRepository)
+    {
+        $this->userPostsRepository = $userPostsRepository;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,20 +29,8 @@ class UserController extends Controller
     public function posts()
     {
         $user = auth()->user();
-        $posts = $this->getUserPosts($user);
+        $posts = $this->userPostsRepository->getPosts($user);
 
         return view('user.posts', compact('posts'));
-    }
-
-    /**
-     * Get the user's posts.
-     *
-     * @param User $user
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
-     */
-    private function getUserPosts(User $user)
-    {
-        $perPage = config('posts.user_limit_results');
-        return $user->posts()->latest()->paginate($perPage);
     }
 }

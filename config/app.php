@@ -197,6 +197,7 @@ return [
         App\Providers\RepositoryServiceProvider::class,
         App\Providers\HttpServiceProvider::class,
         App\Providers\ExternalResourcesApiProvider::class,
+        App\Providers\UserPostsServiceProvider::class,
     ],
 
     /*
