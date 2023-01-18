@@ -21,6 +21,7 @@ class UserController extends Controller
     {
         $this->userPostsRepository = $userPostsRepository;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -28,11 +29,8 @@ class UserController extends Controller
      */
     public function posts()
     {
-
         $user = auth()->user();
-        $perPage = config('posts.user_limit_results');
-
-        $posts = $this->userPostsRepository->getPosts($user)->paginate($perPage);
+        $posts = $this->userPostsRepository->getPaginatedPostsForUser($user);
 
         return view('user.posts', compact('posts'));
     }
