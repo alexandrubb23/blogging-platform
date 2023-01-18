@@ -9,7 +9,6 @@ interface AutoImportBlogPostsServiceInterface
   /**
    * Import blog posts from external resources.
    *
-   * @param array $data
    * @return void
    */
   public function import(): void;
