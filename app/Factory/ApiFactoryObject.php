@@ -24,7 +24,7 @@ abstract class ApiFactoryObject
      *
      * @return static
      */
-    public static function factory(string $apiUrl, object $response): static
+    public static final function factory(string $apiUrl, object $response): static
     {
         return new static($apiUrl, $response);
     }
