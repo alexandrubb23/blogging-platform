@@ -20,11 +20,21 @@ class ApiArticleObject extends ApiFactoryObject
             return false;
         };
 
+        $this->setArticleProperties();
+
+        return true;
+    }
+
+    /**
+     * Set the article properties.
+     *
+     * @return void
+     */
+    private function setArticleProperties()
+    {
         $this->id = $this->response->id;
         $this->title =  $this->response->title;
         $this->description =  $this->response->description;
         $this->publishedAt =  $this->response->publishedAt;
-
-        return true;
     }
 }

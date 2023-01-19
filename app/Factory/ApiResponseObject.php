@@ -18,9 +18,19 @@ class ApiResponseObject extends ApiFactoryObject
             return false;
         }
 
-        $this->status = $this->response->status;
-        $this->articles = $this->response->articles;
+        $this->setResponseProperties();
 
         return true;
+    }
+
+    /**
+     * Set the response properties.
+     *
+     * @return void
+     */
+    private function setResponseProperties()
+    {
+        $this->status = $this->response->status;
+        $this->articles = $this->response->articles;
     }
 }
