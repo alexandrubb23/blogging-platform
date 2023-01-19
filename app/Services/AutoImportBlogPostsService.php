@@ -71,8 +71,8 @@ class AutoImportBlogPostsService implements AutoImportBlogPostsServiceInterface
 
         $apiUrl = $this->externalResource->api_url;
         $result = $this->httpService->getAsObject($apiUrl);
-        $apiResponse = ApiResponseObject::factory($apiUrl, $result);
 
+        $apiResponse = ApiResponseObject::factory($apiUrl, $result);
         if (!$apiResponse->isValid()) {
             return;
         }
